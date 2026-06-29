@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAttributeDto } from './dto/create-attribute.dto';
+import { CreateAttributeDto, Category, Type } from './dto/create-attribute.dto';
 
 @Injectable()
 export class AttributeService {
   private attributesLibrary = [
     {
-      category: `personal info`,
+      categories: Category.PersonalInformation,
       name: `name`,
-      type: `string`,
+      dataTypes: Type.String,
     },
   ];
   create(dto: CreateAttributeDto) {
-    const { category, name, type } = dto;
+    const { categories, name, dataTypes } = dto;
     const newAttribute = {
-      category,
+      categories,
       name,
-      type,
+      dataTypes,
     };
     this.attributesLibrary.push(newAttribute);
     return this.attributesLibrary;
