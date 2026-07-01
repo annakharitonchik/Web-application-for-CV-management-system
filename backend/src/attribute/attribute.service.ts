@@ -1,23 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAttributeDto, Category, Type } from './dto/create-attribute.dto';
+import { CreateAttributeDto } from './dto/create-attribute.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { Attribute } from '../../generated/prisma/client';
 
 @Injectable()
 export class AttributeService {
-  private attributesLibrary = [
-    {
-      categories: Category.PersonalInformation,
-      name: `name`,
-      dataTypes: Type.String,
-    },
-  ];
-  create(dto: CreateAttributeDto) {
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async create(dto: CreateAttributeDto): Promise<Attribute> {
     const { categories, name, dataTypes } = dto;
-    const newAttribute = {
-      categories,
-      name,
-      dataTypes,
-    };
-    this.attributesLibrary.push(newAttribute);
-    return this.attributesLibrary;
+
+    return this.prismaService.attribute.create({
+      data: { categories, name, dataTypes },
+    });
   }
 }
