@@ -9,6 +9,7 @@ datasource db {
 }
 
 model Attribute {
+  id    Int     @id @default(autoincrement())
   categories Category
   name  String @unique
   dataTypes Type
