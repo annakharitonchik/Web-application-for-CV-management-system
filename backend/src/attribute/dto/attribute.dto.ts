@@ -1,4 +1,4 @@
-export class CreateAttributeDto {
+export class AttributeDto {
   categories: Category;
   name: string;
   dataTypes: Type;
