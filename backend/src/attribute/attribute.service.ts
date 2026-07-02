@@ -32,4 +32,8 @@ export class AttributeService {
       where: { id },
     });
   }
+
+  async getAll() {
+    return this.prismaService.attribute.findMany();
+  }
 }

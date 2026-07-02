@@ -29,4 +29,9 @@ export class AttributeController {
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.attributeService.delete(id);
   }
+
+  @Get()
+  getAll() {
+    return this.attributeService.getAll();
+  }
 }
