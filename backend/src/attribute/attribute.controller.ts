@@ -5,7 +5,7 @@ import { AttributeDto } from './dto/attribute.dto';
 @Controller('attribute')
 export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}
-  @Post('create')
+  @Post()
   create(@Body() dto: AttributeDto) {
     return this.attributeService.create(dto);
   }
