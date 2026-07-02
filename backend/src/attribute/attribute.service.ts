@@ -14,4 +14,15 @@ export class AttributeService {
       data: { categories, name, dataTypes },
     });
   }
+  async update(id: number, dto: AttributeDto) {
+    const { categories, name, dataTypes } = dto;
+    return this.prismaService.attribute.update({
+      where: { id },
+      data: {
+        categories,
+        name,
+        dataTypes,
+      },
+    });
+  }
 }
