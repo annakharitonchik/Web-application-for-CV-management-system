@@ -1,8 +1,8 @@
 import type {Category} from "../attribute.ts";
 
-export const categoriesMapper = (categories: Category):string =>{
+export const categoryMapper = (category: Category):string =>{
     let changedCategory : string = "";
-    switch(categories){
+    switch(category){
         case 'CERTIFICATION':
             changedCategory = "Certification"
             break;

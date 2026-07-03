@@ -1,7 +1,7 @@
 export class AttributeDto {
-  categories: Category;
+  category: Category;
   name: string;
-  dataTypes: Type;
+  dataType: Type;
 }
 export enum Category {
   Certification = 'CERTIFICATION',

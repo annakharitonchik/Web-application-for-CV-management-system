@@ -1,8 +1,8 @@
 import type {Type} from "../attribute.ts";
 
-export const dataTypesMapper = (categories: Type):string =>{
+export const dataTypeMapper = (dataType: Type):string =>{
     let changedDataType : string = "";
-    switch(categories){
+    switch(dataType){
         case 'STRING':
             changedDataType = "String"
             break;

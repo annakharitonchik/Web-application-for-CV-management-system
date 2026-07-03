@@ -8,21 +8,21 @@ export class AttributeService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(dto: AttributeDto): Promise<Attribute> {
-    const { categories, name, dataTypes } = dto;
+    const { category, name, dataType } = dto;
 
     return this.prismaService.attribute.create({
-      data: { categories, name, dataTypes },
+      data: { category, name, dataType },
     });
   }
 
   async update(id: number, dto: AttributeDto) {
-    const { categories, name, dataTypes } = dto;
+    const { category, name, dataType } = dto;
     return this.prismaService.attribute.update({
       where: { id },
       data: {
-        categories,
+        category,
         name,
-        dataTypes,
+        dataType,
       },
     });
   }
