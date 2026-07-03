@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {AttributeDto, AttributeDtoView} from "../../dto/attribute.ts";
 import {useEffect, useState} from "react";
-import Attributes from './Attributes.tsx'
+import changeAttributes from './changeAttributes.ts'
 import Header from './Header.tsx'
 import {Table} from "antd";
 const AttributesLibrary =  () => {
@@ -14,10 +14,10 @@ const AttributesLibrary =  () => {
         fetchData().catch(console.error);
     },[])
 
-
+    const changedAttributes = changeAttributes(attributes)
 
    return (
-       <Table<AttributeDtoView> columns={Header} />)
+       <Table<AttributeDtoView> columns={Header} dataSource={changedAttributes} />)
 }
 
 export default AttributesLibrary
