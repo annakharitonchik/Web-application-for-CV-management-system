@@ -1,4 +1,5 @@
 export class AttributeDto {
+    id: number;
     categories: Category;
     name: string;
     dataTypes: Type;
