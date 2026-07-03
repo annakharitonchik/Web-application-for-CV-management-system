@@ -1,8 +1,9 @@
 import axios from 'axios';
-import {AttributeDto} from "../../dto/attribute.ts";
+import {AttributeDto, AttributeDtoView} from "../../dto/attribute.ts";
 import {useEffect, useState} from "react";
 import Attributes from './Attributes.tsx'
 import Header from './Header.tsx'
+import {Table} from "antd";
 const AttributesLibrary =  () => {
     const [attributes, setAttributes] = useState<AttributeDto[]>([])
     useEffect(() =>{
@@ -14,11 +15,9 @@ const AttributesLibrary =  () => {
     },[])
 
 
+
    return (
-       <table>
-           <thead><Header/></thead>
-      <tbody><Attributes attributes = {attributes}/></tbody>
-   </table>)
+       <Table<AttributeDtoView> columns={Header} />)
 }
 
 export default AttributesLibrary

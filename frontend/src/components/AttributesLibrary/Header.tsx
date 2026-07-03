@@ -1,14 +1,21 @@
-const Header =  () => {
+import type {AttributeDtoView} from "../../dto/attribute.ts";
+import type { TableProps } from 'antd';
 
-    return (
-<tr>
-    <th>Name</th>
-    <th>Category</th>
-    <th>Type</th>
-</tr>
-    )
-
-
-}
+const Header : TableProps<AttributeDtoView>['columns'] = [
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: 'Name',
+        dataIndex: 'category',
+        key: 'category',
+    },
+    {
+        title: 'Type',
+        dataIndex: 'dataType',
+        key: 'type',
+    }]
 
 export default Header
