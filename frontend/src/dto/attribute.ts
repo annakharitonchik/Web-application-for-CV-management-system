@@ -4,6 +4,14 @@ export class AttributeDto {
     name: string;
     dataType: Type;
 }
+
+export class AttributeDtoView {
+    key: number;
+    category: string;
+    name: string;
+    dataType: string;
+}
+
 export enum Category {
     Certification = 'CERTIFICATION',
     ProfessionalKnowledge = 'PROFESSIONAL_KNOWLEDGE',
