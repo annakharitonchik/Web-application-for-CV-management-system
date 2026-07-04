@@ -9,7 +9,7 @@ const AttributesLibrary =  () => {
     useEffect(() =>{
         const fetchData = async () => {
 
-            setAttributes((await axios.get<AttributeDto[]>('http://localhost:3000/attribute')).data);
+            setAttributes((await axios.get<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute`)).data);
         }
         fetchData().catch(console.error);
     },[])
