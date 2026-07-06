@@ -1,14 +1,14 @@
 import type {AttributeDtoView} from "../../dto/attribute.ts";
-import type { TableProps } from 'antd';
+import type { TableColumnsType } from 'antd';
 
-const Header : TableProps<AttributeDtoView>['columns'] = [
+const Header : TableColumnsType<AttributeDtoView> = [
     {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
     },
     {
-        title: 'Name',
+        title: 'Category',
         dataIndex: 'category',
         key: 'category',
     },
