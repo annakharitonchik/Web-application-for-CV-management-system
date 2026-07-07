@@ -52,7 +52,7 @@ const AttributesLibrary: React.FC =  () => {
                </Button>
                {hasSelected ? `Selected ${selectedRowKeys.length} items` : null}
            </Flex>
-           <Table<AttributeDtoView> rowSelection={rowSelection} columns={Header} dataSource={dataSource} />
+           <Table<AttributeDtoView> rowSelection={rowSelection} columns={Header} dataSource={dataSource} showSorterTooltip={{ target: 'sorter-icon' }} />
        </Flex>
    )
 }
