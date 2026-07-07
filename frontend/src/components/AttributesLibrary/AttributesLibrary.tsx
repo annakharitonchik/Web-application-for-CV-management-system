@@ -7,13 +7,12 @@ import Header from './Header.tsx'
 import {Table, Button, Flex} from "antd";
 import type { TableProps } from 'antd';
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
-
 const AttributesLibrary: React.FC =  () => {
     const [attributes, setAttributes] = useState<AttributeDto[]>([])
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() =>{
+    useEffect(() => {
         const fetchData = async () => {
 
             setAttributes((await axios.get<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute`)).data);
@@ -21,9 +20,14 @@ const AttributesLibrary: React.FC =  () => {
         fetchData().catch(console.error);
     },[])
 
-    const start = () => {
+    const deleteAttributes =  () => {
         setLoading(true);
-        setTimeout(() => {
+
+        setTimeout(async () => {
+             for (const id of selectedRowKeys) {
+                await axios.delete<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute/${id}`)
+            }
+            setAttributes((await axios.get<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute`)).data);
             setSelectedRowKeys([]);
             setLoading(false);
         }, 1000);
@@ -37,15 +41,13 @@ const AttributesLibrary: React.FC =  () => {
         selectedRowKeys,
         onChange: onSelectChange,
     };
-
     const hasSelected = selectedRowKeys.length > 0;
 
     const dataSource = changeAttributes(attributes)
-
    return (
        <Flex gap="medium" vertical>
            <Flex align="center" gap="medium">
-               <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
+               <Button type="primary" onClick={deleteAttributes} disabled={!hasSelected} loading={loading}>
                    Delete
                </Button>
                {hasSelected ? `Selected ${selectedRowKeys.length} items` : null}
