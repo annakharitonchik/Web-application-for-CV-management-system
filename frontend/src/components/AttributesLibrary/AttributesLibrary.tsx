@@ -1,60 +1,89 @@
 import axios from 'axios';
-import * as React from "react";
-import {AttributeDto, AttributeDtoView} from "../../dto/attribute.ts";
-import {useEffect, useState} from "react";
-import changeAttributes from './changeAttributes.ts'
-import Header from './Header.tsx'
-import {Table, Button, Flex} from "antd";
+import * as React from 'react';
+import { AttributeDto, AttributeDtoView } from '../../dto/attribute.ts';
+import { useEffect, useState } from 'react';
+import changeAttributes from './changeAttributes.ts';
+import Header from './Header.tsx';
+import { Table, Button, Flex } from 'antd';
 import type { TableProps } from 'antd';
-type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
-const AttributesLibrary: React.FC =  () => {
-    const [attributes, setAttributes] = useState<AttributeDto[]>([])
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const [loading, setLoading] = useState(false);
+import { useGetColumnSearchProps } from './useGetColumnSearchProps.tsx';
+type TableRowSelection<T extends object = object> =
+  TableProps<T>['rowSelection'];
 
-    useEffect(() => {
-        const fetchData = async () => {
+const AttributesLibrary: React.FC = () => {
+  const [attributes, setAttributes] = useState<AttributeDto[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [loading, setLoading] = useState(false);
 
-            setAttributes((await axios.get<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute`)).data);
-        }
-        fetchData().catch(console.error);
-    },[])
+  const columnSearchProps = useGetColumnSearchProps('name');
 
-    const deleteAttributes =  () => {
-        setLoading(true);
-
-        setTimeout(async () => {
-             for (const id of selectedRowKeys) {
-                await axios.delete<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute/${id}`)
-            }
-            setAttributes((await axios.get<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute`)).data);
-            setSelectedRowKeys([]);
-            setLoading(false);
-        }, 1000);
+  useEffect(() => {
+    const fetchData = async () => {
+      setAttributes(
+        (
+          await axios.get<AttributeDto[]>(
+            `${import.meta.env.VITE_URL}/attribute`,
+          )
+        ).data,
+      );
     };
+    fetchData().catch(console.error);
+  }, []);
 
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
+  const deleteAttributes = () => {
+    setLoading(true);
 
-    const rowSelection: TableRowSelection<AttributeDtoView> = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
+    setTimeout(async () => {
+      for (const id of selectedRowKeys) {
+        await axios.delete<AttributeDto[]>(
+          `${import.meta.env.VITE_URL}/attribute/${id}`,
+        );
+      }
+      setAttributes(
+        (
+          await axios.get<AttributeDto[]>(
+            `${import.meta.env.VITE_URL}/attribute`,
+          )
+        ).data,
+      );
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
+  };
 
-    const dataSource = changeAttributes(attributes)
-   return (
-       <Flex gap="medium" vertical>
-           <Flex align="center" gap="medium">
-               <Button type="primary" onClick={deleteAttributes} disabled={!hasSelected} loading={loading}>
-                   Delete
-               </Button>
-               {hasSelected ? `Selected ${selectedRowKeys.length} items` : null}
-           </Flex>
-           <Table<AttributeDtoView> rowSelection={rowSelection} columns={Header} dataSource={dataSource} showSorterTooltip={{ target: 'sorter-icon' }} />
-       </Flex>
-   )
-}
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
 
-export default AttributesLibrary
+  const rowSelection: TableRowSelection<AttributeDtoView> = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const hasSelected = selectedRowKeys.length > 0;
+
+  const dataSource = changeAttributes(attributes);
+
+  return (
+    <Flex gap="medium" vertical>
+      <Flex align="center" gap="medium">
+        <Button
+          type="primary"
+          onClick={deleteAttributes}
+          disabled={!hasSelected}
+          loading={loading}
+        >
+          Delete
+        </Button>
+        {hasSelected ? `Selected ${selectedRowKeys.length} items` : null}
+      </Flex>
+      <Table<AttributeDtoView>
+        rowSelection={rowSelection}
+        columns={Header(columnSearchProps)}
+        dataSource={dataSource}
+        showSorterTooltip={{ target: 'sorter-icon' }}
+      />
+    </Flex>
+  );
+};
+
+export default AttributesLibrary;
