@@ -9,29 +9,13 @@ import { AttributeDtoView } from '../../dto/attribute.ts';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { useRef, useState } from 'react';
-import type { FilterDropdownProps } from 'antd/es/table/interface';
 
 export const useGetColumnSearchProps =
   (): TableColumnType<AttributeDtoView> => {
     const [searchText, setSearchText] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
 
     const dataIndex = 'name';
-
-    const handleSearch = (
-      selectedKeys: string[],
-      confirm: FilterDropdownProps['confirm'],
-    ) => {
-      confirm();
-      setSearchText(selectedKeys[0]);
-      setSearchedColumn(dataIndex);
-    };
-
-    const handleReset = (clearFilters: () => void) => {
-      clearFilters();
-      setSearchText('');
-    };
 
     return {
       filterDropdown: ({
@@ -46,34 +30,28 @@ export const useGetColumnSearchProps =
             placeholder={`Search attribute`}
             value={selectedKeys[0]}
             onChange={(e) => {
-              setSelectedKeys(e.target.value ? [e.target.value] : []);
+              const inputValue = e.target.value.trim();
+              const keys = inputValue ? [inputValue] : [];
+              setSelectedKeys(keys);
+              confirm({ closeDropdown: false });
+              setSearchText(keys[0]);
             }}
-            onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
+            onPressEnter={() => {
+              confirm({ closeDropdown: true });
+            }}
             style={{ marginBottom: 8, display: 'block' }}
           />
           <Space>
             <Button
-              type="primary"
-              onClick={() => {
-                confirm({ closeDropdown: false });
-                setSearchText((selectedKeys as string[])[0]);
-                setSearchedColumn(dataIndex);
-              }}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{ width: 90 }}
-            >
-              Search
-            </Button>
-            <Button
               onClick={() => {
                 if (clearFilters) {
-                  handleReset(clearFilters);
+                  clearFilters();
+                  setSearchText('');
                   confirm({ closeDropdown: false });
                 }
               }}
               size="small"
-              style={{ width: 90 }}
+              style={{ width: 180 }}
             >
               Reset
             </Button>
@@ -95,16 +73,13 @@ export const useGetColumnSearchProps =
           }
         },
       },
-      render: (text) =>
-        searchedColumn === dataIndex ? (
-          <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-            searchWords={[searchText]}
-            autoEscape
-            textToHighlight={text ? text.toString() : ''}
-          />
-        ) : (
-          text
-        ),
+      render: (text) => (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ),
     };
   };
