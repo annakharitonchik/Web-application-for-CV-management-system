@@ -15,7 +15,7 @@ const AttributesLibrary: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const columnSearchProps = useGetColumnSearchProps('name');
+  const columnSearchProps = useGetColumnSearchProps();
 
   useEffect(() => {
     const fetchData = async () => {
