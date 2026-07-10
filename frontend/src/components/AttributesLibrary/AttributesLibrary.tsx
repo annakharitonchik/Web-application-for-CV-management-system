@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as React from 'react';
 import { AttributeDto, AttributeDtoView } from '../../dto/attribute.ts';
 import { useEffect, useState } from 'react';
-import changeAttributes from './changeAttributes.ts';
+import changeAttributes from './operations/changeAttributes.ts';
 import Header from './Header.tsx';
 import { Table, Button, Flex } from 'antd';
 import type { TableProps } from 'antd';
