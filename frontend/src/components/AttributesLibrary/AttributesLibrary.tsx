@@ -59,7 +59,6 @@ const AttributesLibrary: React.FC = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-  const hasSelected = selectedRowKeys.length > 0;
 
   const dataSource = changeAttributes(attributes);
 
@@ -69,12 +68,14 @@ const AttributesLibrary: React.FC = () => {
         <Button
           type="primary"
           onClick={deleteAttributes}
-          disabled={!hasSelected}
+          disabled={selectedRowKeys.length <= 0}
           loading={loading}
         >
           Delete
         </Button>
-        {hasSelected ? `Selected ${selectedRowKeys.length} items` : null}
+        {selectedRowKeys.length > 0
+          ? `Selected ${selectedRowKeys.length} items`
+          : null}
       </Flex>
       <Table<AttributeDtoView>
         rowSelection={rowSelection}
