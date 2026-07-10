@@ -7,6 +7,7 @@ import Header from './Header.tsx';
 import { Table, Button, Flex } from 'antd';
 import type { TableProps } from 'antd';
 import { useGetColumnSearchProps } from './useGetColumnSearchProps.tsx';
+import { deleteAttributes } from './operations/deleteAttributes.ts';
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
 
@@ -14,7 +15,6 @@ const AttributesLibrary: React.FC = () => {
   const [attributes, setAttributes] = useState<AttributeDto[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
-
   const columnSearchProps = useGetColumnSearchProps();
 
   useEffect(() => {
@@ -30,34 +30,10 @@ const AttributesLibrary: React.FC = () => {
     fetchData().catch(console.error);
   }, []);
 
-  const deleteAttributes = () => {
-    setLoading(true);
-
-    setTimeout(async () => {
-      for (const id of selectedRowKeys) {
-        await axios.delete<AttributeDto[]>(
-          `${import.meta.env.VITE_URL}/attribute/${id}`,
-        );
-      }
-      setAttributes(
-        (
-          await axios.get<AttributeDto[]>(
-            `${import.meta.env.VITE_URL}/attribute`,
-          )
-        ).data,
-      );
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
-  };
-
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
   const rowSelection: TableRowSelection<AttributeDtoView> = {
     selectedRowKeys,
-    onChange: onSelectChange,
+    onChange: (newSelectedRowKeys: React.Key[]) =>
+      setSelectedRowKeys(newSelectedRowKeys),
   };
 
   const dataSource = changeAttributes(attributes);
@@ -67,7 +43,14 @@ const AttributesLibrary: React.FC = () => {
       <Flex align="center" gap="medium">
         <Button
           type="primary"
-          onClick={deleteAttributes}
+          onClick={() =>
+            deleteAttributes(
+              selectedRowKeys,
+              setSelectedRowKeys,
+              setAttributes,
+              setLoading,
+            )
+          }
           disabled={selectedRowKeys.length <= 0}
           loading={loading}
         >
