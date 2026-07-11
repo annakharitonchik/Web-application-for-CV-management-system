@@ -4,7 +4,7 @@ import { AttributeDto, AttributeDtoView } from '../../dto/attribute.ts';
 import { useEffect, useState } from 'react';
 import changeAttributes from './operations/changeAttributes.ts';
 import Header from './Header.tsx';
-import { Table, Button, Flex } from 'antd';
+import { Table, Button, Flex, Modal } from 'antd';
 import type { TableProps } from 'antd';
 import { useGetColumnSearchProps } from './useGetColumnSearchProps.tsx';
 import { deleteAttributes } from './operations/deleteAttributes.ts';
@@ -16,7 +16,7 @@ const AttributesLibrary: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
   const columnSearchProps = useGetColumnSearchProps();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       setAttributes(
@@ -29,6 +29,9 @@ const AttributesLibrary: React.FC = () => {
     };
     fetchData().catch(console.error);
   }, []);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
 
   const rowSelection: TableRowSelection<AttributeDtoView> = {
     selectedRowKeys,
@@ -39,8 +42,24 @@ const AttributesLibrary: React.FC = () => {
   const dataSource = changeAttributes(attributes);
 
   return (
-    <Flex gap="medium" vertical>
+    <Flex gap="small" vertical>
       <Flex align="center" gap="medium">
+        <>
+          <Button
+            type="primary"
+            onClick={showModal}
+            disabled={selectedRowKeys.length !== 1}
+          >
+            Edit
+          </Button>
+          <Modal
+            title="Edit Attribute"
+            closable={{ 'aria-label': 'Custom Close Button' }}
+            open={isModalOpen}
+            footer={null}
+            onCancel={() => setIsModalOpen(false)}
+          ></Modal>
+        </>
         <Button
           type="primary"
           onClick={() =>
