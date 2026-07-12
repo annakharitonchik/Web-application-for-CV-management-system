@@ -3,6 +3,7 @@ import { Button, Form, Input, Select, Space } from 'antd';
 import { AttributeDto } from '../../dto/attribute.ts';
 import { categoryMapper } from '../../dto/mappers/categoryMapper.ts';
 import { dataTypeMapper } from '../../dto/mappers/dataTypeMapper.ts';
+import { editAttribute } from './operations/editAtrribute.ts';
 
 const layout = {
   labelCol: { span: 4 },
@@ -16,21 +17,29 @@ const tailLayout = {
 const EditModal: React.FC<{
   setIsModalOpen: (arg0: boolean) => void;
   attribute: AttributeDto;
-}> = ({ setIsModalOpen, attribute }) => {
+  setAttributes: (arg0: AttributeDto[]) => void;
+  setLoading: (arg0: boolean) => void;
+}> = ({ setIsModalOpen, attribute, setAttributes, setLoading }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
     form.setFieldsValue({
       name: `${attribute?.name}`,
-      category: `${categoryMapper(attribute?.category)}`,
-      dataType: `${dataTypeMapper(attribute?.dataType)}`,
+      category: `${attribute?.category}`,
+      dataType: `${attribute?.dataType}`,
     });
   }, [attribute, form]);
+
+  const handleAttribute = (changedAttribute: AttributeDto) => {
+    setIsModalOpen(false);
+    editAttribute(attribute, setAttributes, setLoading, changedAttribute);
+  };
 
   return (
     <Form
       {...layout}
       form={form}
+      onFinish={handleAttribute}
       name="control-hooks"
       style={{ maxWidth: 600 }}
       initialValues={{
@@ -78,11 +87,7 @@ const EditModal: React.FC<{
       </Form.Item>
       <Form.Item {...tailLayout}>
         <Space>
-          <Button
-            type="primary"
-            htmlType="submit"
-            onClick={() => setIsModalOpen(false)}
-          >
+          <Button type="primary" htmlType="submit">
             Submit
           </Button>
         </Space>
