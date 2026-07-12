@@ -15,7 +15,8 @@ type TableRowSelection<T extends object = object> =
 const AttributesLibrary: React.FC = () => {
   const [attributes, setAttributes] = useState<AttributeDto[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingEdit, setLoadingEdit] = useState(false);
   const columnSearchProps = useGetColumnSearchProps();
   const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
@@ -50,6 +51,7 @@ const AttributesLibrary: React.FC = () => {
             type="primary"
             onClick={showModal}
             disabled={selectedRowKeys.length !== 1}
+            loading={loadingEdit}
           >
             Edit
           </Button>
@@ -63,6 +65,8 @@ const AttributesLibrary: React.FC = () => {
             <EditForm
               setIsModalOpen={setIsModalOpen}
               attribute={attributes.find((a) => a.id === selectedRowKeys[0])!}
+              setAttributes={setAttributes}
+              setLoading={setLoadingEdit}
             />
           </Modal>
         </>
@@ -73,11 +77,11 @@ const AttributesLibrary: React.FC = () => {
               selectedRowKeys,
               setSelectedRowKeys,
               setAttributes,
-              setLoading,
+              setLoadingDelete,
             )
           }
           disabled={selectedRowKeys.length <= 0}
-          loading={loading}
+          loading={loadingDelete}
         >
           Delete
         </Button>
