@@ -9,7 +9,7 @@ const layout = {
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 20, span: 4 },
+  wrapperCol: { offset: 21, span: 4 },
 };
 
 const EditModal: React.FC<{
@@ -86,7 +86,7 @@ const EditModal: React.FC<{
       <Form.Item {...tailLayout}>
         <Space>
           <Button type="primary" htmlType="submit">
-            Submit
+            Save
           </Button>
         </Space>
       </Form.Item>
