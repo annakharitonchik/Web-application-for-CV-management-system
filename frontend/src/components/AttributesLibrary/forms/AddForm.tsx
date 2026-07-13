@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Button, Form, Input, Select, Space } from 'antd';
 import { AttributeDto } from '../../../dto/attribute.ts';
-// import { addAttribute } from '../operations/editAtrribute.ts';
+import { addAttribute } from '../operations/addAttribute.ts';
 
 const layout = {
   labelCol: { span: 4 },
@@ -16,7 +16,8 @@ const AddModal: React.FC<{
   setIsModalOpen: (arg0: boolean) => void;
   setAttributes: (arg0: AttributeDto[]) => void;
   setLoading: (arg0: boolean) => void;
-}> = ({ setIsModalOpen, setAttributes, setLoading }) => {
+  attributes: AttributeDto[];
+}> = ({ setIsModalOpen, setAttributes, setLoading, attributes }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -25,11 +26,11 @@ const AddModal: React.FC<{
       category: ``,
       dataType: ``,
     });
-  }, [form]);
+  }, [form, attributes]);
 
-  const handleAttribute = (changedAttribute: AttributeDto) => {
+  const handleAttribute = (createdAttribute: AttributeDto) => {
     setIsModalOpen(false);
-    addAttribute(setAttributes, setLoading, changedAttribute);
+    addAttribute(setAttributes, setLoading, createdAttribute);
   };
 
   return (

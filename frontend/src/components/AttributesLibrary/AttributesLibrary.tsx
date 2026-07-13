@@ -66,6 +66,7 @@ const AttributesLibrary: React.FC = () => {
               setIsModalOpen={setIsModalOpenAdd}
               setAttributes={setAttributes}
               setLoading={setLoadingAdd}
+              attributes={attributes}
             />
           </Modal>
         </>
