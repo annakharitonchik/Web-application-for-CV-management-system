@@ -11,11 +11,7 @@ export const editAttribute = (
   setTimeout(async () => {
     await axios.put<AttributeDto>(
       `${import.meta.env.VITE_URL}/attribute/${attribute.id}`,
-      {
-        name: `${changedAttribute.name}`,
-        category: `${changedAttribute?.category}`,
-        dataType: `${changedAttribute?.dataType}`,
-      },
+      changedAttribute,
     );
     setAttributes(
       (await axios.get<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute`))
