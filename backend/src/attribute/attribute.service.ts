@@ -34,6 +34,10 @@ export class AttributeService {
   }
 
   async getAll() {
-    return this.prismaService.attribute.findMany();
+    return this.prismaService.attribute.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+    });
   }
 }
