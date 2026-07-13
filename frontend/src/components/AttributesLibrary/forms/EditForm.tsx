@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Button, Form, Input, Select, Space } from 'antd';
 import { AttributeDto } from '../../../dto/attribute.ts';
-import { editAttribute } from '../operations/editAtrribute.ts';
+import { editAttribute } from '../operations/editAttribute.ts';
 
 const layout = {
   labelCol: { span: 4 },
