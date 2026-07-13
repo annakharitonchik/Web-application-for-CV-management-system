@@ -19,7 +19,8 @@ const AttributesLibrary: React.FC = () => {
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const columnSearchProps = useGetColumnSearchProps();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
+  const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       setAttributes(
@@ -32,9 +33,6 @@ const AttributesLibrary: React.FC = () => {
     };
     fetchData().catch(console.error);
   }, []);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
 
   const rowSelection: TableRowSelection<AttributeDtoView> = {
     selectedRowKeys,
@@ -50,7 +48,7 @@ const AttributesLibrary: React.FC = () => {
         <>
           <Button
             type="primary"
-            // onClick={() => addAttributes(setAttributes, setLoadingAdd)}
+            onClick={() => setIsModalOpenAdd(true)}
             loading={loadingAdd}
           >
             Add
@@ -58,9 +56,9 @@ const AttributesLibrary: React.FC = () => {
           <Modal
             title="Add Attribute"
             closable={{ 'aria-label': 'Custom Close Button' }}
-            open={isModalOpen}
+            open={isModalOpenAdd}
             footer={null}
-            onCancel={() => setIsModalOpen(false)}
+            onCancel={() => setIsModalOpenAdd(false)}
           >
             {/*<AddForm*/}
             {/*  setIsModalOpen={setIsModalOpen}*/}
@@ -72,7 +70,7 @@ const AttributesLibrary: React.FC = () => {
         <>
           <Button
             type="primary"
-            onClick={showModal}
+            onClick={() => setIsModalOpenEdit(true)}
             disabled={selectedRowKeys.length !== 1}
             loading={loadingEdit}
           >
@@ -81,12 +79,12 @@ const AttributesLibrary: React.FC = () => {
           <Modal
             title="Edit Attribute"
             closable={{ 'aria-label': 'Custom Close Button' }}
-            open={isModalOpen}
+            open={isModalOpenEdit}
             footer={null}
-            onCancel={() => setIsModalOpen(false)}
+            onCancel={() => setIsModalOpenEdit(false)}
           >
             <EditForm
-              setIsModalOpen={setIsModalOpen}
+              setIsModalOpen={setIsModalOpenEdit}
               attribute={attributes.find((a) => a.id === selectedRowKeys[0])!}
               setAttributes={setAttributes}
               setLoading={setLoadingEdit}
