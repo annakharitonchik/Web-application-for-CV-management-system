@@ -17,6 +17,7 @@ const AttributesLibrary: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
+  const [loadingAdd, setLoadingAdd] = useState(false);
   const columnSearchProps = useGetColumnSearchProps();
   const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
@@ -46,6 +47,28 @@ const AttributesLibrary: React.FC = () => {
   return (
     <Flex gap="small" vertical>
       <Flex align="center" gap="medium">
+        <>
+          <Button
+            type="primary"
+            // onClick={() => addAttributes(setAttributes, setLoadingAdd)}
+            loading={loadingAdd}
+          >
+            Add
+          </Button>
+          <Modal
+            title="Add Attribute"
+            closable={{ 'aria-label': 'Custom Close Button' }}
+            open={isModalOpen}
+            footer={null}
+            onCancel={() => setIsModalOpen(false)}
+          >
+            {/*<AddForm*/}
+            {/*  setIsModalOpen={setIsModalOpen}*/}
+            {/*  setAttributes={setAttributes}*/}
+            {/*  setLoading={setLoadingEdit}*/}
+            {/*/>*/}
+          </Modal>
+        </>
         <>
           <Button
             type="primary"
