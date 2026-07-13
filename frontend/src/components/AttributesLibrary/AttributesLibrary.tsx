@@ -8,7 +8,7 @@ import { Table, Button, Flex, Modal } from 'antd';
 import type { TableProps } from 'antd';
 import { useGetColumnSearchProps } from './useGetColumnSearchProps.tsx';
 import { deleteAttributes } from './operations/deleteAttributes.ts';
-import EditForm from './EditForm.tsx';
+import EditForm from './forms/EditForm.tsx';
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
 
@@ -61,9 +61,9 @@ const AttributesLibrary: React.FC = () => {
             onCancel={() => setIsModalOpenAdd(false)}
           >
             {/*<AddForm*/}
-            {/*  setIsModalOpen={setIsModalOpen}*/}
+            {/*  setIsModalOpen={setIsModalOpenAdd}*/}
             {/*  setAttributes={setAttributes}*/}
-            {/*  setLoading={setLoadingEdit}*/}
+            {/*  setLoading={setLoadingAdd}*/}
             {/*/>*/}
           </Modal>
         </>

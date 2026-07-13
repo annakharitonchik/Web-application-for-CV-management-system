@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Button, Form, Input, Select, Space } from 'antd';
-import { AttributeDto } from '../../dto/attribute.ts';
-import { categoryMapper } from '../../dto/mappers/categoryMapper.ts';
-import { dataTypeMapper } from '../../dto/mappers/dataTypeMapper.ts';
-import { editAttribute } from './operations/editAtrribute.ts';
+import { AttributeDto } from '../../../dto/attribute.ts';
+import { categoryMapper } from '../../../dto/mappers/categoryMapper.ts';
+import { dataTypeMapper } from '../../../dto/mappers/dataTypeMapper.ts';
+import { editAttribute } from '../operations/editAtrribute.ts';
 
 const layout = {
   labelCol: { span: 4 },
