@@ -1,5 +1,8 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class AttributeDto {
   category: Category;
+  @IsNotEmpty()
   name: string;
   dataType: Type;
 }
