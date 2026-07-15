@@ -64,7 +64,11 @@ const EditModal: React.FC<{
       >
         <Input />
       </Form.Item>
-      <Form.Item name="category" label="Category" rules={[{ required: true }]}>
+      <Form.Item
+        name="category"
+        label="Category"
+        rules={[{ required: true, message: "'Category' is required" }]}
+      >
         <Select
           allowClear
 
@@ -79,7 +83,11 @@ const EditModal: React.FC<{
           ]}
         />
       </Form.Item>
-      <Form.Item name="dataType" label="Type" rules={[{ required: true }]}>
+      <Form.Item
+        name="dataType"
+        label="Type"
+        rules={[{ required: true, message: "'Type' is required" }]}
+      >
         <Select
           allowClear
           placeholder="Select the type"
