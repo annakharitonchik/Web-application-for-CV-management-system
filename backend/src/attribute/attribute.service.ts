@@ -16,7 +16,7 @@ export class AttributeService {
       throw new BadRequestException(`Name ${name} is already existed`);
     }
     return this.prismaService.attribute.create({
-      data: { category, name, dataType },
+      data: { category, name: name.trim(), dataType },
     });
   }
 
@@ -26,7 +26,7 @@ export class AttributeService {
       where: { id },
       data: {
         category,
-        name,
+        name: name.trim(),
         dataType,
       },
     });
