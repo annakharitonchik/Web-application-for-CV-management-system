@@ -9,10 +9,16 @@ export const editAttribute = (
 ) => {
   setLoading(true);
   setTimeout(async () => {
-    await axios.put<AttributeDto>(
-      `${import.meta.env.VITE_URL}/attribute/${attribute.id}`,
-      changedAttribute,
-    );
+    await axios
+      .put<AttributeDto>(
+        `${import.meta.env.VITE_URL}/attribute/${attribute.id}`,
+        changedAttribute,
+      )
+      .catch((err) => {
+        console.log(`name is already existed
+        ${err}`);
+        setLoading(false);
+      });
     setAttributes(
       (await axios.get<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute`))
         .data,

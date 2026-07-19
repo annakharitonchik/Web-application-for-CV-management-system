@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { AttributeDto } from './dto/attribute.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Attribute } from '../../generated/prisma/client';
@@ -9,7 +9,12 @@ export class AttributeService {
 
   async create(dto: AttributeDto): Promise<Attribute> {
     const { category, name, dataType } = dto;
-
+    const existedElem = await this.prismaService.attribute.findUnique({
+      where: { name },
+    });
+    if (existedElem) {
+      throw new BadRequestException(`Name ${name} is already existed`);
+    }
     return this.prismaService.attribute.create({
       data: { category, name, dataType },
     });
