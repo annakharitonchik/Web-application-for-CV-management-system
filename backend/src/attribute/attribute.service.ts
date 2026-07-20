@@ -22,6 +22,12 @@ export class AttributeService {
 
   async update(id: number, dto: AttributeDto) {
     const { category, name, dataType } = dto;
+    const existedElem = await this.prismaService.attribute.findUnique({
+      where: { name },
+    });
+    if (existedElem) {
+      throw new BadRequestException(`Name ${name} is already existed`);
+    }
     return this.prismaService.attribute.update({
       where: { id },
       data: {
