@@ -8,11 +8,13 @@ datasource db {
   provider = "postgresql"
 }
 
+
 model Attribute {
   id    Int     @id @default(autoincrement())
   category Category
   name  String @unique
   dataType Type
+  positions Position[]
 }
 enum Category{
   CERTIFICATION
@@ -29,3 +31,12 @@ enum Type{
   PERIOD
   BOOLEAN
 }
+
+model Position {
+  id    Int     @id @unique @default(autoincrement())
+  name  String
+  description String
+  isPublic Boolean
+  attributes Attribute[]
+}
+
