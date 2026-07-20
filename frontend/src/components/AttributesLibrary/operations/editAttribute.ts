@@ -1,28 +1,47 @@
 import { type AttributeDto } from '../../../dto/attribute.ts';
-import axios from 'axios';
+import axios, { type AxiosError } from 'axios';
+
+type NotificationType = 'success' | 'error';
 
 export const editAttribute = (
   attribute: AttributeDto,
   setAttributes: (arg0: AttributeDto[]) => void,
   setLoading: (arg0: boolean) => void,
   changedAttribute: AttributeDto,
+  openNotificationWithIcon: (
+    type: NotificationType,
+    title: string,
+    description: string,
+  ) => void,
 ) => {
   setLoading(true);
   setTimeout(async () => {
-    await axios
-      .put<AttributeDto>(
+    try {
+      await axios.put<AttributeDto>(
         `${import.meta.env.VITE_URL}/attribute/${attribute.id}`,
         changedAttribute,
-      )
-      .catch((err) => {
-        console.log(`name is already existed
-        ${err}`);
-        setLoading(false);
-      });
-    setAttributes(
-      (await axios.get<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute`))
-        .data,
-    );
-    setLoading(false);
+      );
+      setAttributes(
+        (
+          await axios.get<AttributeDto[]>(
+            `${import.meta.env.VITE_URL}/attribute`,
+          )
+        ).data,
+      );
+      openNotificationWithIcon(
+        'success',
+        'Success',
+        `Attribute was edited successfully!`,
+      );
+      setLoading(false);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      openNotificationWithIcon(
+        'error',
+        'Error',
+        `${axiosError.response?.data?.message}`,
+      );
+      setLoading(false);
+    }
   }, 1000);
 };

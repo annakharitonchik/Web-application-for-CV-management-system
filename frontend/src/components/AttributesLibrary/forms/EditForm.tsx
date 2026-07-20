@@ -3,6 +3,8 @@ import { Button, Form, Input, Select, Space } from 'antd';
 import { AttributeDto } from '../../../dto/attribute.ts';
 import { editAttribute } from '../operations/editAttribute.ts';
 
+type NotificationType = 'success' | 'error';
+
 const layout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 20 },
@@ -17,7 +19,18 @@ const EditModal: React.FC<{
   attribute: AttributeDto;
   setAttributes: (arg0: AttributeDto[]) => void;
   setLoading: (arg0: boolean) => void;
-}> = ({ setIsModalOpen, attribute, setAttributes, setLoading }) => {
+  openNotificationWithIcon: (
+    type: NotificationType,
+    title: string,
+    description: string,
+  ) => void;
+}> = ({
+  setIsModalOpen,
+  attribute,
+  setAttributes,
+  setLoading,
+  openNotificationWithIcon,
+}) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -30,7 +43,13 @@ const EditModal: React.FC<{
 
   const handleAttribute = (changedAttribute: AttributeDto) => {
     setIsModalOpen(false);
-    editAttribute(attribute, setAttributes, setLoading, changedAttribute);
+    editAttribute(
+      attribute,
+      setAttributes,
+      setLoading,
+      changedAttribute,
+      openNotificationWithIcon,
+    );
   };
 
   return (

@@ -10,9 +10,14 @@ import { useGetColumnSearchProps } from './useGetColumnSearchProps.tsx';
 import { deleteAttributes } from './operations/deleteAttributes.ts';
 import EditForm from './forms/EditForm.tsx';
 import AddForm from './forms/AddForm.tsx';
+import { notification } from 'antd';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
+
+type NotificationType = 'success' | 'error';
+
+// success' | 'info' | 'warning' | 'error';
 
 const AttributesLibrary: React.FC = () => {
   const [attributes, setAttributes] = useState<AttributeDto[]>([]);
@@ -23,6 +28,8 @@ const AttributesLibrary: React.FC = () => {
   const columnSearchProps = useGetColumnSearchProps();
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
+
   useEffect(() => {
     const fetchData = async () => {
       setAttributes(
@@ -44,10 +51,22 @@ const AttributesLibrary: React.FC = () => {
 
   const dataSource = changeAttributes(attributes);
 
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    title: string,
+    description: string,
+  ) => {
+    api[type]({
+      title,
+      description,
+    });
+  };
+
   return (
     <Flex gap="small" vertical>
       <Flex align="center" gap="medium">
         <>
+          {contextHolder}
           <Button
             type="primary"
             onClick={() => setIsModalOpenAdd(true)}
@@ -67,6 +86,7 @@ const AttributesLibrary: React.FC = () => {
               setAttributes={setAttributes}
               setLoading={setLoadingAdd}
               attributes={attributes}
+              openNotificationWithIcon={openNotificationWithIcon}
             />
           </Modal>
         </>
@@ -91,6 +111,7 @@ const AttributesLibrary: React.FC = () => {
               attribute={attributes.find((a) => a.id === selectedRowKeys[0])!}
               setAttributes={setAttributes}
               setLoading={setLoadingEdit}
+              openNotificationWithIcon={openNotificationWithIcon}
             />
           </Modal>
         </>
@@ -102,6 +123,7 @@ const AttributesLibrary: React.FC = () => {
               setSelectedRowKeys,
               setAttributes,
               setLoadingDelete,
+              openNotificationWithIcon,
             )
           }
           disabled={selectedRowKeys.length <= 0}
