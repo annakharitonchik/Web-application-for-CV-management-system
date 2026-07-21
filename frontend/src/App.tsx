@@ -1,8 +1,12 @@
-import AttributesLibrary from "./components/AttributesLibrary/AttributesLibrary.tsx";
+import AppRoutes from './components/AppRoutes.tsx';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 function App() {
-    return(
-    <AttributesLibrary/>)
+  return (
+    <Router>
+      <AppRoutes />
+    </Router>
+  );
 }
 
-export default App
+export default App;
