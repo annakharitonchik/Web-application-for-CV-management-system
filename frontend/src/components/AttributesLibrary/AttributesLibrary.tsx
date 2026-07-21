@@ -139,7 +139,6 @@ const AttributesLibrary: React.FC = () => {
         rowSelection={rowSelection}
         columns={Header(columnSearchProps)}
         dataSource={dataSource}
-        showSorterTooltip={{ target: 'sorter-icon' }}
       />
     </Flex>
   );

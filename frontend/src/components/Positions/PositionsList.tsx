@@ -129,7 +129,6 @@ const PositionsList: React.FC = () => {
         rowSelection={rowSelection}
         columns={Header}
         dataSource={positions}
-        showSorterTooltip={{ target: 'sorter-icon' }}
       />
     </Flex>
   );
