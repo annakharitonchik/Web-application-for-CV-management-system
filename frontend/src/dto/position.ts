@@ -15,3 +15,11 @@ export class PositionDtoView {
   isPublic: boolean;
   attributes: AttributeDto[];
 }
+
+export class PositionEditDto {
+  key: number;
+  name: string;
+  description: string;
+  isPublic: boolean;
+  attributes: string[];
+}
