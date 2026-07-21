@@ -5,7 +5,7 @@ const TransformPositionDto = (positions: PositionDto[]): PositionDtoView[] => {
     key: position.id,
     name: position.name,
     description: position.description,
-    isPublic: position.isPublic,
+    isPublic: position.isPublic ? 'yes' : 'no',
     attributes: position.attributes,
   }));
 };
