@@ -2,29 +2,30 @@ import axios from 'axios';
 import * as React from 'react';
 
 import { useEffect, useState } from 'react';
-import { Table, Button, Flex, Modal } from 'antd';
+import { Table, Button, Flex, Modal, notification } from 'antd';
 import type { TableProps } from 'antd';
 // import { notification } from 'antd';
 import Header from './Header.tsx';
 import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
 import transformPositionDto from './operations/transformPositionDto.ts';
+import { deletePositions } from './operations/deletePositions.ts';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
 
-// type NotificationType = 'success' | 'error';
+type NotificationType = 'success' | 'error';
 
 // success' | 'info' | 'warning' | 'error';
 
 const PositionsList: React.FC = () => {
   const [positions, setPositions] = useState<PositionDto[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  // const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   // const [loadingEdit, setLoadingEdit] = useState(false);
   // const [loadingAdd, setLoadingAdd] = useState(false);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
-  // const [api, contextHolder] = notification.useNotification();
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,16 +43,16 @@ const PositionsList: React.FC = () => {
       setSelectedRowKeys(newSelectedRowKeys),
   };
 
-  // const openNotificationWithIcon = (
-  //   type: NotificationType,
-  //   title: string,
-  //   description: string,
-  // ) => {
-  //   api[type]({
-  //     title,
-  //     description,
-  //   });
-  // };
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    title: string,
+    description: string,
+  ) => {
+    api[type]({
+      title,
+      description,
+    });
+  };
 
   const dataSource = transformPositionDto(positions);
 
@@ -59,7 +60,7 @@ const PositionsList: React.FC = () => {
     <Flex gap="small" vertical>
       <Flex align="center" gap="medium">
         <>
-          {/*{contextHolder}*/}
+          {contextHolder}
           <Button
             type="primary"
             onClick={() => setIsModalOpenAdd(true)}
@@ -110,17 +111,17 @@ const PositionsList: React.FC = () => {
         </>
         <Button
           type="primary"
-          // onClick={() =>
-          //   deleteAttributes(
-          //     selectedRowKeys,
-          //     setSelectedRowKeys,
-          //     setAttributes,
-          //     setLoadingDelete,
-          //     openNotificationWithIcon,
-          //   )
-          // }
+          onClick={() =>
+            deletePositions(
+              selectedRowKeys,
+              setSelectedRowKeys,
+              setPositions,
+              setLoadingDelete,
+              openNotificationWithIcon,
+            )
+          }
           disabled={selectedRowKeys.length <= 0}
-          // loading={loadingDelete}
+          loading={loadingDelete}
         >
           Delete
         </Button>
