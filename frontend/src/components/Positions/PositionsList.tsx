@@ -8,6 +8,7 @@ import Header from './Header.tsx';
 import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
 import transformPositionDto from './operations/transformPositionDto.ts';
 import { deletePositions } from './operations/deletePositions.ts';
+import { AttributeDto } from '../../dto/attribute.ts';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
@@ -18,6 +19,8 @@ type NotificationType = 'success' | 'error';
 
 const PositionsList: React.FC = () => {
   const [positions, setPositions] = useState<PositionDto[]>([]);
+  const [attributes, setAttributes] = useState<AttributeDto[]>([]);
+
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loadingDelete, setLoadingDelete] = useState(false);
   // const [loadingEdit, setLoadingEdit] = useState(false);
@@ -31,6 +34,13 @@ const PositionsList: React.FC = () => {
       setPositions(
         (await axios.get<PositionDto[]>(`${import.meta.env.VITE_URL}/position`))
           .data,
+      );
+      setAttributes(
+        (
+          await axios.get<AttributeDto[]>(
+            `${import.meta.env.VITE_URL}/attribute`,
+          )
+        ).data,
       );
     };
     fetchData().catch(console.error);
@@ -106,6 +116,7 @@ const PositionsList: React.FC = () => {
             {/*  setLoading={setLoadingEdit}*/}
             {/*  openNotificationWithIcon={openNotificationWithIcon}*/}
             {/*/>*/}
+              attributes={attributes}
           </Modal>
         </>
         <Button
