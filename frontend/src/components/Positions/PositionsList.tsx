@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Table, Button, Flex, Modal, notification } from 'antd';
 import type { TableProps } from 'antd';
-// import { notification } from 'antd';
 import Header from './Header.tsx';
 import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
 import transformPositionDto from './operations/transformPositionDto.ts';
