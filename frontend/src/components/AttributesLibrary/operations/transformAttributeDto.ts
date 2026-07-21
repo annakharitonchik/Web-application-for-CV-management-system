@@ -2,7 +2,9 @@ import { AttributeDto, AttributeDtoView } from '../../../dto/attribute.ts';
 import { categoryMapper } from '../../../dto/mappers/categoryMapper.ts';
 import { dataTypeMapper } from '../../../dto/mappers/dataTypeMapper.ts';
 
-const ChangeAttributes = (attributes: AttributeDto[]): AttributeDtoView[] => {
+const TransformAttributeDto = (
+  attributes: AttributeDto[],
+): AttributeDtoView[] => {
   return attributes.map((attribute) => ({
     key: attribute.id,
     name: attribute.name,
@@ -10,4 +12,4 @@ const ChangeAttributes = (attributes: AttributeDto[]): AttributeDtoView[] => {
     dataType: dataTypeMapper(attribute.dataType),
   }));
 };
-export default ChangeAttributes;
+export default TransformAttributeDto;

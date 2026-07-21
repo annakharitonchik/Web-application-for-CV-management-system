@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as React from 'react';
 import { AttributeDto, AttributeDtoView } from '../../dto/attribute.ts';
 import { useEffect, useState } from 'react';
-import changeAttributes from './operations/changeAttributes.ts';
+import transformAttributeDto from './operations/transformAttributeDto.ts';
 import Header from './Header.tsx';
 import { Table, Button, Flex, Modal } from 'antd';
 import type { TableProps } from 'antd';
@@ -49,7 +49,7 @@ const AttributesLibrary: React.FC = () => {
       setSelectedRowKeys(newSelectedRowKeys),
   };
 
-  const dataSource = changeAttributes(attributes);
+  const dataSource = transformAttributeDto(attributes);
 
   const openNotificationWithIcon = (
     type: NotificationType,
