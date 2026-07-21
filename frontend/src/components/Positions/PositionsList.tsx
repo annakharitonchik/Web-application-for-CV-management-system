@@ -8,6 +8,7 @@ import Header from './Header.tsx';
 import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
 import transformPositionDto from './operations/transformPositionDto.ts';
 import { deletePositions } from './operations/deletePositions.ts';
+import EditForm from './forms/EditForm.tsx';
 import { AttributeDto } from '../../dto/attribute.ts';
 
 type TableRowSelection<T extends object = object> =
@@ -23,7 +24,7 @@ const PositionsList: React.FC = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  // const [loadingEdit, setLoadingEdit] = useState(false);
+  const [loadingEdit, setLoadingEdit] = useState(false);
   // const [loadingAdd, setLoadingAdd] = useState(false);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
@@ -98,7 +99,7 @@ const PositionsList: React.FC = () => {
             type="primary"
             onClick={() => setIsModalOpenEdit(true)}
             disabled={selectedRowKeys.length !== 1}
-            // loading={loadingEdit}
+            loading={loadingEdit}
           >
             Edit
           </Button>
@@ -109,14 +110,14 @@ const PositionsList: React.FC = () => {
             footer={null}
             onCancel={() => setIsModalOpenEdit(false)}
           >
-            {/*<EditForm*/}
-            {/*  setIsModalOpen={setIsModalOpenEdit}*/}
-            {/*  attribute={attributes.find((a) => a.id === selectedRowKeys[0])!}*/}
-            {/*  setAttributes={setAttributes}*/}
-            {/*  setLoading={setLoadingEdit}*/}
-            {/*  openNotificationWithIcon={openNotificationWithIcon}*/}
-            {/*/>*/}
+            <EditForm
               attributes={attributes}
+              setIsModalOpen={setIsModalOpenEdit}
+              position={positions.find((a) => a.id === selectedRowKeys[0])!}
+              setPositions={setPositions}
+              setLoading={setLoadingEdit}
+              openNotificationWithIcon={openNotificationWithIcon}
+            />
           </Modal>
         </>
         <Button
