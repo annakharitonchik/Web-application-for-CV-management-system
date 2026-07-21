@@ -1,7 +1,7 @@
 import type { TableColumnsType } from 'antd';
-import type { PositionDto } from '../../dto/position.ts';
+import type { PositionDtoView } from '../../dto/position.ts';
 
-const Header: TableColumnsType<PositionDto> = [
+const Header: TableColumnsType<PositionDtoView> = [
   {
     title: 'Name',
     dataIndex: 'name',

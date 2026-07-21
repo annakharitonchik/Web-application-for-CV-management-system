@@ -6,7 +6,8 @@ import { Table, Button, Flex, Modal } from 'antd';
 import type { TableProps } from 'antd';
 // import { notification } from 'antd';
 import Header from './Header.tsx';
-import type { PositionDto } from '../../dto/position.ts';
+import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
+import transformPositionDto from './operations/transformPositionDto.ts';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
@@ -35,7 +36,7 @@ const PositionsList: React.FC = () => {
     fetchData().catch(console.error);
   }, []);
 
-  const rowSelection: TableRowSelection<PositionDto> = {
+  const rowSelection: TableRowSelection<PositionDtoView> = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys: React.Key[]) =>
       setSelectedRowKeys(newSelectedRowKeys),
@@ -51,6 +52,8 @@ const PositionsList: React.FC = () => {
   //     description,
   //   });
   // };
+
+  const dataSource = transformPositionDto(positions);
 
   return (
     <Flex gap="small" vertical>
@@ -125,10 +128,10 @@ const PositionsList: React.FC = () => {
           ? `Selected ${selectedRowKeys.length} items`
           : null}
       </Flex>
-      <Table<PositionDto>
+      <Table<PositionDtoView>
         rowSelection={rowSelection}
         columns={Header}
-        dataSource={positions}
+        dataSource={dataSource}
       />
     </Flex>
   );
