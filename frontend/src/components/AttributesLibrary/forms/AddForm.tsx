@@ -6,12 +6,21 @@ import { addAttribute } from '../operations/addAttribute.ts';
 type NotificationType = 'success' | 'error';
 
 const layout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 20 },
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 4 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 20 },
+  },
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 20, span: 4 },
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 4, offset: 20 },
+  },
 };
 
 const AddModal: React.FC<{
@@ -125,7 +134,9 @@ const AddModal: React.FC<{
         />
       </Form.Item>
       <Form.Item {...tailLayout}>
-        <Space>
+        <Space
+          style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}
+        >
           <Button type="primary" htmlType="submit">
             Save
           </Button>
