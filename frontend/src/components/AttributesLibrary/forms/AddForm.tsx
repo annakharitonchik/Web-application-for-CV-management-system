@@ -11,7 +11,7 @@ const layout = {
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 21, span: 4 },
+  wrapperCol: { offset: 20, span: 4 },
 };
 
 const AddModal: React.FC<{
