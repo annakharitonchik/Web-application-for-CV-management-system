@@ -11,6 +11,7 @@ import { deletePositions } from './operations/deletePositions.ts';
 import EditForm from './forms/EditForm.tsx';
 import { AttributeDto } from '../../dto/attribute.ts';
 import AddForm from './forms/AddForm.tsx';
+import { copyPositions } from './operations/copyPositions.ts';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
@@ -24,9 +25,12 @@ const PositionsList: React.FC = () => {
   const [attributes, setAttributes] = useState<AttributeDto[]>([]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingCopy, setLoadingCopy] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(false);
+
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
   const [api, contextHolder] = notification.useNotification();
@@ -137,6 +141,23 @@ const PositionsList: React.FC = () => {
           loading={loadingDelete}
         >
           Delete
+        </Button>
+        <Button
+          type="primary"
+          onClick={() =>
+            copyPositions(
+              positions,
+              selectedRowKeys,
+              setSelectedRowKeys,
+              setPositions,
+              setLoadingCopy,
+              openNotificationWithIcon,
+            )
+          }
+          disabled={selectedRowKeys.length <= 0}
+          loading={loadingCopy}
+        >
+          Copy
         </Button>
         {selectedRowKeys.length > 0
           ? `Selected ${selectedRowKeys.length} items`
