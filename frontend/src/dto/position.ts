@@ -12,7 +12,7 @@ export class PositionDtoView {
   key: number;
   name: string;
   description: string;
-  isPublic: boolean;
+  isPublic: string;
   attributes: AttributeDto[];
 }
 
