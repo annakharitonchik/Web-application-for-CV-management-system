@@ -10,6 +10,7 @@ import transformPositionDto from './operations/transformPositionDto.ts';
 import { deletePositions } from './operations/deletePositions.ts';
 import EditForm from './forms/EditForm.tsx';
 import { AttributeDto } from '../../dto/attribute.ts';
+import AddForm from './forms/AddForm.tsx';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
@@ -25,7 +26,7 @@ const PositionsList: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
-  // const [loadingAdd, setLoadingAdd] = useState(false);
+  const [loadingAdd, setLoadingAdd] = useState(false);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
   const [api, contextHolder] = notification.useNotification();
@@ -74,7 +75,7 @@ const PositionsList: React.FC = () => {
           <Button
             type="primary"
             onClick={() => setIsModalOpenAdd(true)}
-            // loading={loadingAdd}
+            loading={loadingAdd}
           >
             Add
           </Button>
@@ -85,13 +86,14 @@ const PositionsList: React.FC = () => {
             footer={null}
             onCancel={() => setIsModalOpenAdd(false)}
           >
-            {/*<AddForm*/}
-            {/*  setIsModalOpen={setIsModalOpenAdd}*/}
-            {/*  setAttributes={setAttributes}*/}
-            {/*  setLoading={setLoadingAdd}*/}
-            {/*  attributes={attributes}*/}
-            {/*  openNotificationWithIcon={openNotificationWithIcon}*/}
-            {/*/>*/}
+            <AddForm
+              attributes={attributes}
+              setIsModalOpen={setIsModalOpenEdit}
+              position={positions.find((a) => a.id === selectedRowKeys[0])!}
+              setPositions={setPositions}
+              setLoading={setLoadingAdd}
+              openNotificationWithIcon={openNotificationWithIcon}
+            />
           </Modal>
         </>
         <>
