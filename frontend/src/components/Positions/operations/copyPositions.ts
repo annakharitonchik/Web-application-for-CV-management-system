@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosError } from 'axios';
 import * as React from 'react';
 import type { PositionDto } from '../../../dto/position.ts';
 
@@ -19,24 +19,34 @@ export const copyPositions = (
   setLoading(true);
 
   setTimeout(async () => {
-    let selectedPosition: PositionDto;
-    for (const id of selectedRowKeys) {
-      selectedPosition = positions.find((p) => p.id === id)!;
-      await axios.post<PositionDto>(
-        `${import.meta.env.VITE_URL}/position`,
-        selectedPosition,
+    try {
+      let selectedPosition: PositionDto;
+      for (const id of selectedRowKeys) {
+        selectedPosition = positions.find((p) => p.id === id)!;
+        await axios.post<PositionDto>(
+          `${import.meta.env.VITE_URL}/position`,
+          selectedPosition,
+        );
+      }
+      setPositions(
+        (await axios.get<PositionDto[]>(`${import.meta.env.VITE_URL}/position`))
+          .data,
       );
+      openNotificationWithIcon(
+        'success',
+        'Success',
+        `Positions were copied successfully!`,
+      );
+      setSelectedRowKeys([]);
+      setLoading(false);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      openNotificationWithIcon(
+        'error',
+        'Error',
+        `${axiosError.response?.data?.message}`,
+      );
+      setLoading(false);
     }
-    setPositions(
-      (await axios.get<PositionDto[]>(`${import.meta.env.VITE_URL}/position`))
-        .data,
-    );
-    openNotificationWithIcon(
-      'success',
-      'Success',
-      `Positions were copied successfully!`,
-    );
-    setSelectedRowKeys([]);
-    setLoading(false);
   }, 1000);
 };

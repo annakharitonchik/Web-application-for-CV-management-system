@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosError } from 'axios';
 import * as React from 'react';
 import type { PositionDto } from '../../../dto/position.ts';
 
@@ -18,21 +18,31 @@ export const deletePositions = (
   setLoading(true);
 
   setTimeout(async () => {
-    for (const id of selectedRowKeys) {
-      await axios.delete<PositionDto[]>(
-        `${import.meta.env.VITE_URL}/position/${id}`,
+    try {
+      for (const id of selectedRowKeys) {
+        await axios.delete<PositionDto[]>(
+          `${import.meta.env.VITE_URL}/position/${id}`,
+        );
+      }
+      setPositions(
+        (await axios.get<PositionDto[]>(`${import.meta.env.VITE_URL}/position`))
+          .data,
       );
+      openNotificationWithIcon(
+        'success',
+        'Success',
+        `Positions were deleted successfully!`,
+      );
+      setSelectedRowKeys([]);
+      setLoading(false);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      openNotificationWithIcon(
+        'error',
+        'Error',
+        `${axiosError.response?.data?.message}`,
+      );
+      setLoading(false);
     }
-    setPositions(
-      (await axios.get<PositionDto[]>(`${import.meta.env.VITE_URL}/position`))
-        .data,
-    );
-    openNotificationWithIcon(
-      'success',
-      'Success',
-      `Positions were deleted successfully!`,
-    );
-    setSelectedRowKeys([]);
-    setLoading(false);
   }, 1000);
 };

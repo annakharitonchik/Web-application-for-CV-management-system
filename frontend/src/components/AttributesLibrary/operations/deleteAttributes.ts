@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosError } from 'axios';
 import type { AttributeDto } from '../../../dto/attribute.ts';
 import * as React from 'react';
 
@@ -18,21 +18,34 @@ export const deleteAttributes = (
   setLoading(true);
 
   setTimeout(async () => {
-    for (const id of selectedRowKeys) {
-      await axios.delete<AttributeDto[]>(
-        `${import.meta.env.VITE_URL}/attribute/${id}`,
+    try {
+      for (const id of selectedRowKeys) {
+        await axios.delete<AttributeDto[]>(
+          `${import.meta.env.VITE_URL}/attribute/${id}`,
+        );
+      }
+      setAttributes(
+        (
+          await axios.get<AttributeDto[]>(
+            `${import.meta.env.VITE_URL}/attribute`,
+          )
+        ).data,
       );
+      openNotificationWithIcon(
+        'success',
+        'Success',
+        `Attributes were deleted successfully!`,
+      );
+      setSelectedRowKeys([]);
+      setLoading(false);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      openNotificationWithIcon(
+        'error',
+        'Error',
+        `${axiosError.response?.data?.message}`,
+      );
+      setLoading(false);
     }
-    setAttributes(
-      (await axios.get<AttributeDto[]>(`${import.meta.env.VITE_URL}/attribute`))
-        .data,
-    );
-    openNotificationWithIcon(
-      'success',
-      'Success',
-      `Attributes were deleted successfully!`,
-    );
-    setSelectedRowKeys([]);
-    setLoading(false);
   }, 1000);
 };
