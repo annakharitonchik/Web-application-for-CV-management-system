@@ -1,10 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import AttributesLibrary from './AttributesLibrary/AttributesLibrary.tsx';
 import Positions from './Positions/PositionsList.tsx';
+import Register from './Register/Register.tsx';
 
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/register" element={<Register />} />
       <Route path="/attribute" element={<AttributesLibrary />} />
 
       <Route path="/position" element={<Positions />} />
