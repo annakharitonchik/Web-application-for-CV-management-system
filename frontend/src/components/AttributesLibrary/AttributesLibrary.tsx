@@ -63,7 +63,7 @@ const AttributesLibrary: React.FC = () => {
   };
 
   return (
-    <Flex gap="small" vertical>
+    <Flex gap="small" vertical style={{ padding: '10px' }}>
       <Flex align="center" gap="medium">
         <>
           {contextHolder}
