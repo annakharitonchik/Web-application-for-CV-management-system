@@ -43,6 +43,7 @@ export class PositionController {
   }
 
   @Get()
+  @Roles(Role.Admin, Role.Recruiter, Role.Candidate)
   getAll() {
     return this.positionService.getAll();
   }

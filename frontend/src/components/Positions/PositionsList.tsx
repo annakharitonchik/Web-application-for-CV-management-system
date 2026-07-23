@@ -37,18 +37,28 @@ const PositionsList: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setPositions(
-        (await axios.get<PositionDto[]>(`${import.meta.env.VITE_URL}/position`))
-          .data,
+      const accessToken = localStorage.getItem('accessToken');
+      const { data: positionsData } = await axios.get<PositionDto[]>(
+        `${import.meta.env.VITE_URL}/position`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
       );
-      setAttributes(
-        (
-          await axios.get<AttributeDto[]>(
-            `${import.meta.env.VITE_URL}/attribute`,
-          )
-        ).data,
+      setPositions(positionsData);
+      const { data: attributesData } = await axios.get<AttributeDto[]>(
+        `${import.meta.env.VITE_URL}/attribute`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
       );
+
+      setAttributes(attributesData);
     };
+
     fetchData().catch(console.error);
   }, []);
 

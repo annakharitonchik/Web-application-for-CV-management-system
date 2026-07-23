@@ -12,7 +12,11 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const handleLogin = async (values: LoginFormValues) => {
     try {
-      await axios.post(import.meta.env.VITE_URL + '/auth/login', values);
+      const { data } = await axios.post(
+        import.meta.env.VITE_URL + '/auth/login',
+        values,
+      );
+      localStorage.setItem('accessToken', data.accessToken);
       messageApi.success('Login success!');
       setTimeout(() => {
         navigate('/position');

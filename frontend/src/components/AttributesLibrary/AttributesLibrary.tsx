@@ -32,13 +32,16 @@ const AttributesLibrary: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setAttributes(
-        (
-          await axios.get<AttributeDto[]>(
-            `${import.meta.env.VITE_URL}/attribute`,
-          )
-        ).data,
+      const accessToken = localStorage.getItem('accessToken');
+      const { data } = await axios.get<AttributeDto[]>(
+        `${import.meta.env.VITE_URL}/attribute`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
       );
+      setAttributes(data);
     };
     fetchData().catch(console.error);
   }, []);
