@@ -11,6 +11,9 @@ const Header: TableColumnsType<PositionDtoView> = [
     title: 'Description',
     dataIndex: 'description',
     key: 'description',
+    ellipsis: {
+      showTitle: true,
+    },
   },
   {
     title: 'Public',
