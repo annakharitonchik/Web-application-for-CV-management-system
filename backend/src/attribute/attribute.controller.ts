@@ -8,6 +8,8 @@ import {
   Get,
   ParseIntPipe,
   UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { AttributeService } from './attribute.service';
 import { AttributeDto } from './dto/attribute.dto';
@@ -16,6 +18,7 @@ import { Role } from '../auth/roles/role.enum';
 import { Roles } from '../auth/roles/roles.decorator';
 import { RolesGuard } from '../auth/roles/roles.guard';
 @UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 @Roles(Role.Admin, Role.Recruiter)
 @Controller('attribute')
 export class AttributeController {
