@@ -84,7 +84,7 @@ const PositionsList: React.FC = () => {
             Add
           </Button>
           <Modal
-            title="Add Attribute"
+            title="Add Position"
             closable={{ 'aria-label': 'Custom Close Button' }}
             open={isModalOpenAdd}
             footer={null}
