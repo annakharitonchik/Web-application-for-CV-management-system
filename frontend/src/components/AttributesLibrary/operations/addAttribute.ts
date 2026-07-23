@@ -16,14 +16,26 @@ export const addAttribute = (
   setLoading(true);
   setTimeout(async () => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
       await axios.post<AttributeDto>(
         `${import.meta.env.VITE_URL}/attribute`,
         createdAttribute,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
       );
+
       setAttributes(
         (
           await axios.get<AttributeDto[]>(
             `${import.meta.env.VITE_URL}/attribute`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            },
           )
         ).data,
       );

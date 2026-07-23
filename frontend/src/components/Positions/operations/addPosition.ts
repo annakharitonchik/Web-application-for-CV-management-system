@@ -16,13 +16,28 @@ export const addPosition = (
   setLoading(true);
   setTimeout(async () => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+
       await axios.post<PositionDto>(
         `${import.meta.env.VITE_URL}/position`,
         createdPosition,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
       );
       setPositions(
-        (await axios.get<PositionDto[]>(`${import.meta.env.VITE_URL}/position`))
-          .data,
+        (
+          await axios.get<PositionDto[]>(
+            `${import.meta.env.VITE_URL}/position`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            },
+          )
+        ).data,
       );
       openNotificationWithIcon(
         'success',

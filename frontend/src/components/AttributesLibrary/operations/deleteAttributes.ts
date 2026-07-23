@@ -19,15 +19,26 @@ export const deleteAttributes = (
 
   setTimeout(async () => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
       for (const id of selectedRowKeys) {
         await axios.delete<AttributeDto[]>(
           `${import.meta.env.VITE_URL}/attribute/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         );
       }
       setAttributes(
         (
           await axios.get<AttributeDto[]>(
             `${import.meta.env.VITE_URL}/attribute`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            },
           )
         ).data,
       );

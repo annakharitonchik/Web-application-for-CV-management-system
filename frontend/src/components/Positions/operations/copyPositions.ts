@@ -20,17 +20,32 @@ export const copyPositions = (
 
   setTimeout(async () => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+
       let selectedPosition: PositionDto;
       for (const id of selectedRowKeys) {
         selectedPosition = positions.find((p) => p.id === id)!;
         await axios.post<PositionDto>(
           `${import.meta.env.VITE_URL}/position`,
           selectedPosition,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         );
       }
       setPositions(
-        (await axios.get<PositionDto[]>(`${import.meta.env.VITE_URL}/position`))
-          .data,
+        (
+          await axios.get<PositionDto[]>(
+            `${import.meta.env.VITE_URL}/position`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            },
+          )
+        ).data,
       );
       openNotificationWithIcon(
         'success',

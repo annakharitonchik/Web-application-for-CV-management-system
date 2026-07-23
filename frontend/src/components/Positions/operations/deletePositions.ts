@@ -19,14 +19,29 @@ export const deletePositions = (
 
   setTimeout(async () => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+
       for (const id of selectedRowKeys) {
         await axios.delete<PositionDto[]>(
           `${import.meta.env.VITE_URL}/position/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         );
       }
       setPositions(
-        (await axios.get<PositionDto[]>(`${import.meta.env.VITE_URL}/position`))
-          .data,
+        (
+          await axios.get<PositionDto[]>(
+            `${import.meta.env.VITE_URL}/position`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            },
+          )
+        ).data,
       );
       openNotificationWithIcon(
         'success',
