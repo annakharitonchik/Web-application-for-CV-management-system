@@ -19,7 +19,7 @@ const Login: React.FC = () => {
       localStorage.setItem('accessToken', data.accessToken);
       messageApi.success('Login success!');
       setTimeout(() => {
-        navigate('/position');
+        navigate('/home');
       }, 3000);
     } catch (error: unknown) {
       const axiosError = error as AxiosError<{ message: string }>;
