@@ -7,7 +7,7 @@ interface LoginFormValues {
   email?: string;
   password?: string;
 }
-const Home: React.FC = () => {
+const Login: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
   const handleLogin = async (values: LoginFormValues) => {
@@ -71,4 +71,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Login;
