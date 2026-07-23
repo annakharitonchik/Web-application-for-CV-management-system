@@ -7,10 +7,16 @@ import {
   Delete,
   Get,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { AttributeService } from './attribute.service';
 import { AttributeDto } from './dto/attribute.dto';
-
+import { AuthGuard } from '@nestjs/passport';
+import { Role } from '../auth/roles/role.enum';
+import { Roles } from '../auth/roles/roles.decorator';
+import { RolesGuard } from '../auth/roles/roles.guard';
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles(Role.Admin, Role.Recruiter)
 @Controller('attribute')
 export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}

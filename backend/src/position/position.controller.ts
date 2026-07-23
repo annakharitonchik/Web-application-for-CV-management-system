@@ -10,7 +10,11 @@ import {
 } from '@nestjs/common';
 import { PositionService } from './position.service';
 import { PositionDto } from './dto/position.dto';
+import { Roles } from '../auth/roles/roles.decorator';
+import { Role } from '../auth/roles/role.enum';
 
+@Roles(Role.Admin)
+@Roles(Role.Recruiter)
 @Controller('position')
 export class PositionController {
   constructor(private readonly positionService: PositionService) {}

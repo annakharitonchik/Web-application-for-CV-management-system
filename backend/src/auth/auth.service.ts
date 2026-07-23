@@ -48,6 +48,17 @@ export class AuthService {
     }
     return this.generateTokens(user.id);
   }
+
+  async validate(id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+    });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    return user;
+  }
+
   private generateTokens(id: string) {
     const payload: JwtPayload = { id };
     const accessToken = this.jwtService.sign(payload, {
