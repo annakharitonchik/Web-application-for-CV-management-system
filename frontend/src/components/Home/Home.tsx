@@ -2,9 +2,9 @@ import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios, { type AxiosError } from 'axios';
 interface LoginFormValues {
-  username?: string;
+  email?: string;
   password?: string;
 }
 const Home: React.FC = () => {
@@ -17,8 +17,10 @@ const Home: React.FC = () => {
       setTimeout(() => {
         navigate('/position');
       }, 3000);
-    } catch {
-      messageApi.error('Login failed');
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message: string }>;
+
+      messageApi.error(`${axiosError.response?.data?.message}`);
     }
   };
   return (
@@ -39,7 +41,7 @@ const Home: React.FC = () => {
         onFinish={handleLogin}
       >
         <Form.Item
-          name="username"
+          name="email"
           rules={[{ required: true, message: 'Please input your Email!' }]}
         >
           <Input prefix={<UserOutlined />} placeholder="Email" type="email" />
