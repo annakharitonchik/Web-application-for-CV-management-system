@@ -1,10 +1,14 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterRequest } from './dto/register.dto';
-import { genSaltSync, hashSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt.interfaces';
-
+import { LoginRequest } from './dto/login.dto';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
@@ -24,10 +28,24 @@ export class AuthService {
     const user = await this.prismaService.user.create({
       data: {
         email,
-        password: hashSync(password, genSaltSync(10)),
+        password: await bcrypt.hash(password, 10),
         role,
       },
     });
+    return this.generateTokens(user.id);
+  }
+  async login(dto: LoginRequest) {
+    const { email, password } = dto;
+    const user = await this.prismaService.user.findUnique({
+      where: { email },
+    });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
     return this.generateTokens(user.id);
   }
   private generateTokens(id: string) {
