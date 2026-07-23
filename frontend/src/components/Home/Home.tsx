@@ -13,7 +13,7 @@ const Home: React.FC = () => {
   const handleLogin = async (values: LoginFormValues) => {
     try {
       await axios.post(import.meta.env.VITE_URL + '/auth/login', values);
-      messageApi.success('Login successes!');
+      messageApi.success('Login success!');
       setTimeout(() => {
         navigate('/position');
       }, 3000);
