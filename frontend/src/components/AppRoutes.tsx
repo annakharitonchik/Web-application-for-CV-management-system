@@ -21,7 +21,6 @@ const AppRoutes = () => {
     (accessToken && jwtDecode<CustomJwtPayload>(accessToken).email) || '';
   const role =
     (accessToken && jwtDecode<CustomJwtPayload>(accessToken).role) || '';
-
   return (
     <Layout>
       <Header
@@ -36,7 +35,7 @@ const AppRoutes = () => {
             items={[
               {
                 key: 0,
-                label: <Link to="/Home">Home</Link>,
+                label: <Link to="/home">Home</Link>,
               },
               {
                 key: 1,
@@ -66,8 +65,6 @@ const AppRoutes = () => {
                 localStorage.removeItem('accessToken');
                 navigate('/');
               }}
-
-              // loading={loadingDelete}
             >
               Log out
             </Button>
@@ -75,18 +72,13 @@ const AppRoutes = () => {
         )}
       </Header>
       <Routes>
-        <Route
-          path="/"
-          element={email !== '' ? <Navigate to="/home" replace /> : <Login />}
-        />
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Login />} />
 
         <Route
-          path="/register"
-          element={
-            email !== '' ? <Navigate to="/home" replace /> : <Register />
-          }
+          path="/home"
+          element={!accessToken ? <Navigate to="/" replace /> : <Home />}
         />
+        <Route path="/register" element={<Register />} />
         <Route
           path="/attribute"
           element={
@@ -97,7 +89,6 @@ const AppRoutes = () => {
             )
           }
         />
-
         {/* Точно так же защищаем список позиций */}
         <Route
           path="/position"
