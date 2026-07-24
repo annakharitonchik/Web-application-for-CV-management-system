@@ -6,6 +6,7 @@ import Login from './Login/Login.tsx';
 import Home from './Home/Home.tsx';
 import { Button, Layout, Menu } from 'antd';
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
+import NotFound from './NotFound/NotFound.tsx';
 const { Header } = Layout;
 interface CustomJwtPayload extends JwtPayload {
   email?: string;
@@ -82,7 +83,7 @@ const AppRoutes = () => {
           path="/attribute"
           element={
             role !== 'ADMIN' && role !== 'RECRUITER' ? (
-              <Navigate to="/home" replace />
+              <Navigate to="/notfound" replace />
             ) : (
               <AttributesLibrary />
             )
@@ -94,13 +95,13 @@ const AppRoutes = () => {
           path="/position"
           element={
             role !== 'ADMIN' && role !== 'RECRUITER' ? (
-              <Navigate to="/home" replace />
+              <Navigate to="/notfound" replace />
             ) : (
               <Positions />
             )
           }
         />
-        {/*<Route path="*" element={<NotFound />} />*/}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
   );
