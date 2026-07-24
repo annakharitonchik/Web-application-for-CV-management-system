@@ -10,6 +10,8 @@ import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
 // import { deletePositions } from './operations/deletePositions.ts';
 import Header from './Header.tsx';
 import transformPositionDto from '../Positions/operations/transformPositionDto.ts';
+import { jwtDecode } from 'jwt-decode';
+// import { Link } from 'react-router-dom';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
@@ -20,7 +22,7 @@ type TableRowSelection<T extends object = object> =
 
 const Home: React.FC = () => {
   const [positions, setPositions] = useState<PositionDto[]>([]);
-
+  const [role, setRole] = useState<string>('');
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   // const [loadingDelete, setLoadingDelete] = useState(false);
@@ -29,6 +31,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
+      const role = jwtDecode(accessToken!).role;
       const { data } = await axios.get<PositionDto[]>(
         `${import.meta.env.VITE_URL}/position`,
         {
@@ -38,6 +41,7 @@ const Home: React.FC = () => {
         },
       );
       setPositions(data);
+      setRole(role);
     };
 
     fetchData().catch(console.error);
@@ -64,18 +68,27 @@ const Home: React.FC = () => {
 
   return (
     <Flex gap="small" vertical style={{ padding: '10px' }}>
+      <Flex align="center" justify="center" gap="medium">
+        <p>POSITIONS</p>
+      </Flex>
       <Flex align="center" gap="medium">
         {/*{contextHolder}*/}
-
-        <Button
-          type="primary"
-          // onClick={() =>
-          // }
-          disabled={selectedRowKeys.length <= 0}
-          // loading={loadingDelete}
-        >
-          Delete
-        </Button>
+        {role === 'ADMIN' || role === 'RECRUITER' ? (
+          <>
+            {/*<Link to="/attribute">Go to Attributes Library </Link>*/}
+            {/*<Link to="/position">Go to Positions List </Link>*/}
+          </>
+        ) : (
+          <Button
+            type="primary"
+            // onClick={() =>
+            // }
+            disabled={selectedRowKeys.length <= 0}
+            // loading={loadingDelete}
+          >
+            Delete
+          </Button>
+        )}
       </Flex>
       <Table<PositionDtoView>
         rowSelection={rowSelection}
