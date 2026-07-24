@@ -1,4 +1,4 @@
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 import AttributesLibrary from './AttributesLibrary/AttributesLibrary.tsx';
 import Positions from './Positions/PositionsList.tsx';
 import Register from './Register/Register.tsx';
@@ -11,6 +11,7 @@ interface CustomJwtPayload extends JwtPayload {
   email?: string;
   role?: string;
 }
+
 const AppRoutes = () => {
   const navigate = useNavigate();
 
@@ -75,10 +76,30 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/attribute" element={<AttributesLibrary />} />
 
-        <Route path="/position" element={<Positions />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/attribute"
+          element={
+            role !== 'ADMIN' && role !== 'RECRUITER' ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <AttributesLibrary />
+            )
+          }
+        />
+
+        {/* Точно так же защищаем список позиций */}
+        <Route
+          path="/position"
+          element={
+            role !== 'ADMIN' && role !== 'RECRUITER' ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <Positions />
+            )
+          }
+        />
         {/*<Route path="*" element={<NotFound />} />*/}
       </Routes>
     </Layout>
