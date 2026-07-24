@@ -1,5 +1,14 @@
-import type { TableColumnsType } from 'antd';
+import { type TableColumnsType, Tag } from 'antd';
 import type { PositionDtoView } from '../../dto/position.ts';
+import { jwtDecode, type JwtPayload } from 'jwt-decode';
+
+interface CustomJwtPayload extends JwtPayload {
+  email?: string;
+}
+const accessToken = localStorage.getItem('accessToken');
+
+const email =
+  (accessToken && jwtDecode<CustomJwtPayload>(accessToken).email) || '';
 
 const Header: TableColumnsType<PositionDtoView> = [
   {
@@ -14,6 +23,15 @@ const Header: TableColumnsType<PositionDtoView> = [
     ellipsis: {
       showTitle: true,
     },
+  },
+  {
+    title: 'Status',
+    render: (_, record) =>
+      record.users.some((user) => user.email === email) ? (
+        <Tag color="green">Applied</Tag>
+      ) : (
+        <Tag color="blue">Available</Tag>
+      ),
   },
 ];
 

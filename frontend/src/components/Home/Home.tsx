@@ -20,6 +20,7 @@ type NotificationType = 'success' | 'error';
 // success' | 'info' | 'warning' | 'error';
 interface CustomJwtPayload extends JwtPayload {
   role?: string;
+  email?: string;
 }
 
 const Home: React.FC = () => {
@@ -50,10 +51,17 @@ const Home: React.FC = () => {
     fetchData().catch(console.error);
   }, []);
 
+  const accessToken = localStorage.getItem('accessToken');
+  const email =
+    (accessToken && jwtDecode<CustomJwtPayload>(accessToken).email) || '';
+
   const rowSelection: TableRowSelection<PositionDtoView> = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys: React.Key[]) =>
       setSelectedRowKeys(newSelectedRowKeys),
+    getCheckboxProps: (record) => ({
+      disabled: record.users.some((user) => user.email === email),
+    }),
   };
 
   const openNotificationWithIcon = (
