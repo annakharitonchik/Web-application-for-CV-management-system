@@ -25,7 +25,7 @@ interface CustomJwtPayload extends JwtPayload {
 
 const Home: React.FC = () => {
   const [positions, setPositions] = useState<PositionDto[]>([]);
-  const [role, setRole] = useState<string>('');
+  const [role, setRole] = useState<string | null>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   // const [loadingDelete, setLoadingDelete] = useState(false);
@@ -82,9 +82,7 @@ const Home: React.FC = () => {
       <Flex gap="small" vertical style={{ padding: '10px' }}>
         <Flex align="center" gap="medium">
           {/*{contextHolder}*/}
-          {role === 'ADMIN' || role === 'RECRUITER' ? (
-            <></>
-          ) : (
+          {role !== null && role === 'CANDIDATE' && (
             <Button
               type="primary"
               // onClick={() =>
