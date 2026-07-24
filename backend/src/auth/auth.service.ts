@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt.interfaces';
 import { LoginRequest } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
+import { Role } from '../../generated/prisma/enums';
 @Injectable()
 export class AuthService {
   constructor(
@@ -32,7 +33,7 @@ export class AuthService {
         role,
       },
     });
-    return this.generateTokens(user.id);
+    return this.generateTokens(user.id, user.role);
   }
   async login(dto: LoginRequest) {
     const { email, password } = dto;
@@ -46,7 +47,7 @@ export class AuthService {
     if (!isValidPassword) {
       throw new UnauthorizedException('Invalid email or password');
     }
-    return this.generateTokens(user.id);
+    return this.generateTokens(user.id, user.role);
   }
 
   async validate(id: string) {
@@ -59,8 +60,8 @@ export class AuthService {
     return user;
   }
 
-  private generateTokens(id: string) {
-    const payload: JwtPayload = { id };
+  private generateTokens(id: string, role: Role) {
+    const payload: JwtPayload = { id, role };
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: '1d',
     });
