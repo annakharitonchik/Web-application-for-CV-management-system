@@ -10,7 +10,7 @@ import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
 // import { deletePositions } from './operations/deletePositions.ts';
 import Header from './Header.tsx';
 import transformPositionDto from '../Positions/operations/transformPositionDto.ts';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode, type JwtPayload } from 'jwt-decode';
 // import { Link } from 'react-router-dom';
 
 type TableRowSelection<T extends object = object> =
@@ -19,6 +19,9 @@ type TableRowSelection<T extends object = object> =
 // type NotificationType = 'success' | 'error';
 
 // success' | 'info' | 'warning' | 'error';
+interface CustomJwtPayload extends JwtPayload {
+  role?: string;
+}
 
 const Home: React.FC = () => {
   const [positions, setPositions] = useState<PositionDto[]>([]);
@@ -31,7 +34,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
-      const role = jwtDecode(accessToken!).role;
+      const role = jwtDecode<CustomJwtPayload>(accessToken!).role || '';
       const { data } = await axios.get<PositionDto[]>(
         `${import.meta.env.VITE_URL}/position`,
         {
@@ -67,34 +70,42 @@ const Home: React.FC = () => {
   const dataSource = transformPositionDto(positions);
 
   return (
-    <Flex gap="small" vertical style={{ padding: '10px' }}>
-      <Flex align="center" justify="center" gap="medium">
+    <Flex vertical>
+      <Flex
+        align="center"
+        justify="center"
+        style={{ backgroundColor: 'white' }}
+      >
         <p>POSITIONS</p>
       </Flex>
-      <Flex align="center" gap="medium">
-        {/*{contextHolder}*/}
-        {role === 'ADMIN' || role === 'RECRUITER' ? (
-          <>
-            {/*<Link to="/attribute">Go to Attributes Library </Link>*/}
-            {/*<Link to="/position">Go to Positions List </Link>*/}
-          </>
-        ) : (
-          <Button
-            type="primary"
-            // onClick={() =>
-            // }
-            disabled={selectedRowKeys.length <= 0}
-            // loading={loadingDelete}
-          >
-            Delete
-          </Button>
-        )}
+
+      <Flex gap="small" vertical style={{ padding: '10px' }}>
+        <Flex align="center" gap="medium">
+          {/*{contextHolder}*/}
+          {role === 'ADMIN' || role === 'RECRUITER' ? (
+            <></>
+          ) : (
+            <Button
+              type="primary"
+              // onClick={() =>
+              // }
+              disabled={selectedRowKeys.length <= 0}
+              // loading={loadingDelete}
+            >
+              Delete
+            </Button>
+          )}
+        </Flex>
+        <Table<PositionDtoView>
+          rowSelection={rowSelection}
+          columns={Header}
+          dataSource={dataSource}
+          pagination={false}
+          scroll={{
+            y: 450,
+          }}
+        />
       </Flex>
-      <Table<PositionDtoView>
-        rowSelection={rowSelection}
-        columns={Header}
-        dataSource={dataSource}
-      />
     </Flex>
   );
 };

@@ -177,6 +177,10 @@ const PositionsList: React.FC = () => {
         rowSelection={rowSelection}
         columns={Header}
         dataSource={dataSource}
+        pagination={false}
+        scroll={{
+          y: 450,
+        }}
       />
     </Flex>
   );

@@ -142,6 +142,10 @@ const AttributesLibrary: React.FC = () => {
         rowSelection={rowSelection}
         columns={Header(columnSearchProps)}
         dataSource={dataSource}
+        pagination={false}
+        scroll={{
+          y: 450,
+        }}
       />
     </Flex>
   );

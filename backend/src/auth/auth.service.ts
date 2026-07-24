@@ -33,7 +33,7 @@ export class AuthService {
         role,
       },
     });
-    return this.generateTokens(user.id, user.role);
+    return this.generateTokens(user.id, user.role, user.email);
   }
   async login(dto: LoginRequest) {
     const { email, password } = dto;
@@ -47,7 +47,7 @@ export class AuthService {
     if (!isValidPassword) {
       throw new UnauthorizedException('Invalid email or password');
     }
-    return this.generateTokens(user.id, user.role);
+    return this.generateTokens(user.id, user.role, user.email);
   }
 
   async validate(id: string) {
@@ -60,8 +60,8 @@ export class AuthService {
     return user;
   }
 
-  private generateTokens(id: string, role: Role) {
-    const payload: JwtPayload = { id, role };
+  private generateTokens(id: string, role: Role, email: string) {
+    const payload: JwtPayload = { id, role, email };
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: '1d',
     });

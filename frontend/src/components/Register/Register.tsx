@@ -30,7 +30,7 @@ const Register: React.FC = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100dvh',
+        minHeight: '90dvh',
         padding: '0 16px',
       }}
     >
