@@ -46,6 +46,22 @@ export class PositionService {
       },
       include: {
         attributes: true,
+        users: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
+  async apply(id: number, email: string) {
+    return this.prismaService.position.update({
+      where: { id },
+      data: {
+        users: {
+          connect: { email },
+        },
       },
     });
   }

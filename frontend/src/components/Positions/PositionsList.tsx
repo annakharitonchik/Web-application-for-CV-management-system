@@ -33,6 +33,7 @@ const PositionsList: React.FC = () => {
 
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
+  const [isModalOpenApply, setIsModalOpenApply] = useState(false);
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
@@ -55,7 +56,6 @@ const PositionsList: React.FC = () => {
           },
         },
       );
-
       setAttributes(attributesData);
     };
 
@@ -78,6 +78,10 @@ const PositionsList: React.FC = () => {
       description,
     });
   };
+
+  const position = positions.find((a) => a.id === selectedRowKeys[0]);
+
+  const emails = position?.users.map((user) => user.email);
 
   const dataSource = transformPositionDto(positions);
 
@@ -169,6 +173,30 @@ const PositionsList: React.FC = () => {
         >
           Copy
         </Button>
+        <>
+          <Button
+            type="primary"
+            disabled={selectedRowKeys.length !== 1}
+            onClick={() => setIsModalOpenApply(true)}
+          >
+            Applied users
+          </Button>
+          <Modal
+            title="Applied users"
+            closable={{ 'aria-label': 'Custom Close Button' }}
+            open={isModalOpenApply}
+            footer={null}
+            onCancel={() => {
+              setIsModalOpenApply(false);
+            }}
+          >
+            {emails?.length ? (
+              emails.map((email, i) => <p key={i}>{`${i + 1}. ${email}`}</p>)
+            ) : (
+              <p>Not applied users yet</p>
+            )}
+          </Modal>
+        </>
         {selectedRowKeys.length > 0
           ? `Selected ${selectedRowKeys.length} items`
           : null}

@@ -38,6 +38,7 @@ model Position {
   description String
   isPublic Boolean
   attributes Attribute[]
+  users User[]
 }
 
 
@@ -46,6 +47,7 @@ model User {
   email  String @unique
   password String
   role Role @default(CANDIDATE)
+  positions Position[]
 }
 
 enum Role{

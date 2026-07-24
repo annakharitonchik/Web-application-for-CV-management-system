@@ -75,10 +75,18 @@ const AppRoutes = () => {
         )}
       </Header>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route
+          path="/"
+          element={email !== '' ? <Navigate to="/home" replace /> : <Login />}
+        />
         <Route path="/home" element={<Home />} />
 
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/register"
+          element={
+            email !== '' ? <Navigate to="/home" replace /> : <Register />
+          }
+        />
         <Route
           path="/attribute"
           element={

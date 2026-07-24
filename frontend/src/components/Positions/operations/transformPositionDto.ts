@@ -7,6 +7,7 @@ const TransformPositionDto = (positions: PositionDto[]): PositionDtoView[] => {
     description: position.description,
     isPublic: position.isPublic ? 'yes' : 'no',
     attributes: position.attributes,
+    users: position.users,
   }));
 };
 export default TransformPositionDto;

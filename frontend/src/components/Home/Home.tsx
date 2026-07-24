@@ -2,21 +2,20 @@ import axios from 'axios';
 import * as React from 'react';
 
 import { useEffect, useState } from 'react';
-import { Table, Button, Flex } from 'antd';
+import { Table, Button, Flex, notification } from 'antd';
 import type { TableProps } from 'antd';
 
 import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
 
-// import { deletePositions } from './operations/deletePositions.ts';
 import Header from './Header.tsx';
 import transformPositionDto from '../Positions/operations/transformPositionDto.ts';
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
-// import { Link } from 'react-router-dom';
+import { applyPositions } from '../Positions/operations/applyPositions.ts';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
 
-// type NotificationType = 'success' | 'error';
+type NotificationType = 'success' | 'error';
 
 // success' | 'info' | 'warning' | 'error';
 interface CustomJwtPayload extends JwtPayload {
@@ -28,13 +27,14 @@ const Home: React.FC = () => {
   const [role, setRole] = useState<string | null>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  // const [loadingDelete, setLoadingDelete] = useState(false);
-  // const [api, contextHolder] = notification.useNotification();
-
+  const [loadingApply, setLoadingApply] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
-      const role = jwtDecode<CustomJwtPayload>(accessToken!).role || '';
+      const role =
+        (accessToken && jwtDecode<CustomJwtPayload>(accessToken).role) || '';
+
       const { data } = await axios.get<PositionDto[]>(
         `${import.meta.env.VITE_URL}/position`,
         {
@@ -56,16 +56,16 @@ const Home: React.FC = () => {
       setSelectedRowKeys(newSelectedRowKeys),
   };
 
-  // const openNotificationWithIcon = (
-  //   type: NotificationType,
-  //   title: string,
-  //   description: string,
-  // ) => {
-  //   api[type]({
-  //     title,
-  //     description,
-  //   });
-  // };
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    title: string,
+    description: string,
+  ) => {
+    api[type]({
+      title,
+      description,
+    });
+  };
 
   const dataSource = transformPositionDto(positions);
 
@@ -81,16 +81,22 @@ const Home: React.FC = () => {
 
       <Flex gap="small" vertical style={{ padding: '10px' }}>
         <Flex align="center" gap="medium">
-          {/*{contextHolder}*/}
+          {contextHolder}
           {role !== null && role === 'CANDIDATE' && (
             <Button
               type="primary"
-              // onClick={() =>
-              // }
+              onClick={() =>
+                applyPositions(
+                  selectedRowKeys,
+                  setSelectedRowKeys,
+                  setLoadingApply,
+                  openNotificationWithIcon,
+                )
+              }
               disabled={selectedRowKeys.length <= 0}
-              // loading={loadingDelete}
+              loading={loadingApply}
             >
-              Delete
+              Apply for a position
             </Button>
           )}
         </Flex>

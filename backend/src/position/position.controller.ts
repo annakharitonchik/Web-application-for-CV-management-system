@@ -17,6 +17,7 @@ import { Roles } from '../auth/roles/roles.decorator';
 import { Role } from '../auth/roles/role.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/roles/roles.guard';
+import { ApplyDto } from './dto/apply.dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
@@ -46,5 +47,10 @@ export class PositionController {
   @Roles(Role.Admin, Role.Recruiter, Role.Candidate)
   getAll() {
     return this.positionService.getAll();
+  }
+  @Put(':id/apply')
+  @Roles(Role.Candidate)
+  apply(@Param('id', ParseIntPipe) id: number, @Body() dto: ApplyDto) {
+    return this.positionService.apply(id, dto.email);
   }
 }
