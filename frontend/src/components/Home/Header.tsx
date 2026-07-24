@@ -3,7 +3,7 @@ import type { PositionDtoView } from '../../dto/position.ts';
 
 const Header: TableColumnsType<PositionDtoView> = [
   {
-    title: 'Name',
+    title: 'Position',
     dataIndex: 'name',
     key: 'name',
   },
