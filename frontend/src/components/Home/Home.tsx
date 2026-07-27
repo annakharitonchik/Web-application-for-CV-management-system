@@ -1,27 +1,18 @@
-import axios from 'axios';
 import * as React from 'react';
-
 import { useEffect, useState } from 'react';
 import { Table, Button, Flex, notification } from 'antd';
 import type { TableProps } from 'antd';
-
 import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
-
 import Header from './Header.tsx';
 import transformPositionDto from '../Positions/operations/transformPositionDto.ts';
-import { jwtDecode, type JwtPayload } from 'jwt-decode';
 import { applyPositions } from '../Positions/operations/applyPositions.ts';
+import { AccessTokenService } from '../AccessTokenService.ts';
+import { axiosApi } from '../../axios.ts';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
 
 type NotificationType = 'success' | 'error';
-
-// success' | 'info' | 'warning' | 'error';
-interface CustomJwtPayload extends JwtPayload {
-  role?: string;
-  email?: string;
-}
 
 const Home: React.FC = () => {
   const [positions, setPositions] = useState<PositionDto[]>([]);
@@ -30,20 +21,12 @@ const Home: React.FC = () => {
 
   const [loadingApply, setLoadingApply] = useState(false);
   const [api, contextHolder] = notification.useNotification();
+  const accessTokenService = new AccessTokenService();
   useEffect(() => {
     const fetchData = async () => {
-      const accessToken = localStorage.getItem('accessToken');
-      const role =
-        (accessToken && jwtDecode<CustomJwtPayload>(accessToken).role) || '';
+      const { role } = accessTokenService.decodeToken();
 
-      const { data } = await axios.get<PositionDto[]>(
-        `${import.meta.env.VITE_URL}/position`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      const { data } = await axiosApi.get<PositionDto[]>(`/position`);
       setPositions(data);
       setRole(role);
     };
@@ -51,9 +34,7 @@ const Home: React.FC = () => {
     fetchData().catch(console.error);
   }, []);
 
-  const accessToken = localStorage.getItem('accessToken');
-  const email =
-    (accessToken && jwtDecode<CustomJwtPayload>(accessToken).email) || '';
+  const { email } = accessTokenService.decodeToken();
 
   const rowSelection: TableRowSelection<PositionDtoView> = {
     selectedRowKeys,
@@ -109,7 +90,9 @@ const Home: React.FC = () => {
           )}
         </Flex>
         <Table<PositionDtoView>
-          rowSelection={rowSelection}
+          rowSelection={
+            role !== null && role === 'CANDIDATE' ? rowSelection : undefined
+          }
           columns={Header}
           dataSource={dataSource}
           pagination={false}

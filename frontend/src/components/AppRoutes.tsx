@@ -1,107 +1,76 @@
-import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import AttributesLibrary from './AttributesLibrary/AttributesLibrary.tsx';
 import Positions from './Positions/PositionsList.tsx';
 import Register from './Register/Register.tsx';
 import Login from './Login/Login.tsx';
 import Home from './Home/Home.tsx';
-import { Button, Layout, Menu } from 'antd';
-import { jwtDecode, type JwtPayload } from 'jwt-decode';
+import { Layout } from 'antd';
 import NotFound from './NotFound/NotFound.tsx';
-const { Header } = Layout;
-interface CustomJwtPayload extends JwtPayload {
-  email?: string;
-  role?: string;
-}
+import Header from './Header/Header.tsx';
+import { AccessTokenService } from './AccessTokenService.ts';
+import Forbidden from './Forbidden/Forbidden.tsx';
+import { useState } from 'react';
+
+const { Content } = Layout;
 
 const AppRoutes = () => {
-  const navigate = useNavigate();
+  const accessTokenService = new AccessTokenService();
+  const { role } = accessTokenService.decodeToken();
 
-  const accessToken = localStorage.getItem('accessToken');
-  const email =
-    (accessToken && jwtDecode<CustomJwtPayload>(accessToken).email) || '';
-  const role =
-    (accessToken && jwtDecode<CustomJwtPayload>(accessToken).role) || '';
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!accessTokenService.getToken(),
+  );
+
   return (
     <Layout>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          backgroundColor: '#ffffff',
-        }}
-      >
-        {(role === 'ADMIN' || role === 'RECRUITER') && (
-          <Menu
-            items={[
-              {
-                key: 0,
-                label: <Link to="/home">Home</Link>,
-              },
-              {
-                key: 1,
-                label: <Link to="/attribute">Go to Attributes Library </Link>,
-              },
-              {
-                key: 2,
-                label: <Link to="/position">Go to Positions List </Link>,
-              },
-            ]}
-            mode="horizontal"
-            style={{
-              flex: 1,
-              minWidth: 0,
-              border: 0,
-              backgroundColor: '#ffffff',
-            }}
+      <Header setIsAuthenticated={setIsAuthenticated} />
+      <Content>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/home" replace />
+              ) : (
+                <Login setIsAuthenticated={setIsAuthenticated} />
+              )
+            }
           />
-        )}
-        {email && (
-          <>
-            <div>{`Your email: ${email}`}</div>
-            <Button
-              style={{ marginLeft: '10px' }}
-              type="primary"
-              onClick={() => {
-                localStorage.removeItem('accessToken');
-                navigate('/');
-              }}
-            >
-              Log out
-            </Button>
-          </>
-        )}
-      </Header>
-      <Routes>
-        <Route path="/" element={<Login />} />
 
-        <Route
-          path="/home"
-          element={!accessToken ? <Navigate to="/" replace /> : <Home />}
-        />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/attribute"
-          element={
-            role !== 'ADMIN' && role !== 'RECRUITER' ? (
-              <Navigate to="/notfound" replace />
-            ) : (
-              <AttributesLibrary />
-            )
-          }
-        />
-        {/* Точно так же защищаем список позиций */}
-        <Route
-          path="/position"
-          element={
-            role !== 'ADMIN' && role !== 'RECRUITER' ? (
-              <Navigate to="/notfound" replace />
-            ) : (
-              <Positions />
-            )
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route
+            path="/register"
+            element={
+              isAuthenticated ? <Navigate to="/home" replace /> : <Register />
+            }
+          />
+
+          <Route path="/home" element={<Home />} />
+
+          <Route
+            path="/attribute"
+            element={
+              role !== 'ADMIN' && role !== 'RECRUITER' ? (
+                <Navigate to="/forbidden" replace />
+              ) : (
+                <AttributesLibrary />
+              )
+            }
+          />
+
+          <Route
+            path="/position"
+            element={
+              role !== 'ADMIN' && role !== 'RECRUITER' ? (
+                <Navigate to="/forbidden" replace />
+              ) : (
+                <Positions />
+              )
+            }
+          />
+          <Route path="/forbidden" element={<Forbidden />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Content>
     </Layout>
   );
 };

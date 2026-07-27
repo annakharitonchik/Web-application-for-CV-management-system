@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as React from 'react';
 
 import { useEffect, useState } from 'react';
@@ -12,13 +11,12 @@ import EditForm from './forms/EditForm.tsx';
 import { AttributeDto } from '../../dto/attribute.ts';
 import AddForm from './forms/AddForm.tsx';
 import { copyPositions } from './operations/copyPositions.ts';
+import { axiosApi } from '../../axios.ts';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
 
 type NotificationType = 'success' | 'error';
-
-// success' | 'info' | 'warning' | 'error';
 
 const PositionsList: React.FC = () => {
   const [positions, setPositions] = useState<PositionDto[]>([]);
@@ -38,24 +36,11 @@ const PositionsList: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const accessToken = localStorage.getItem('accessToken');
-      const { data: positionsData } = await axios.get<PositionDto[]>(
-        `${import.meta.env.VITE_URL}/position`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      const { data: positionsData } =
+        await axiosApi.get<PositionDto[]>(`/position`);
       setPositions(positionsData);
-      const { data: attributesData } = await axios.get<AttributeDto[]>(
-        `${import.meta.env.VITE_URL}/attribute`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      const { data: attributesData } =
+        await axiosApi.get<AttributeDto[]>(`/attribute`);
       setAttributes(attributesData);
     };
 
@@ -87,6 +72,7 @@ const PositionsList: React.FC = () => {
 
   return (
     <Flex gap="small" vertical style={{ padding: '10px' }}>
+      <p>POSITIONS LIST</p>
       <Flex align="center" gap="medium">
         <>
           {contextHolder}
@@ -106,8 +92,8 @@ const PositionsList: React.FC = () => {
           >
             <AddForm
               attributes={attributes}
-              setIsModalOpen={setIsModalOpenEdit}
-              position={positions.find((a) => a.id === selectedRowKeys[0])!}
+              setIsModalOpen={setIsModalOpenAdd}
+              positions={positions}
               setPositions={setPositions}
               setLoading={setLoadingAdd}
               openNotificationWithIcon={openNotificationWithIcon}

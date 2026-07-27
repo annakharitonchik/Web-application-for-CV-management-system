@@ -6,12 +6,14 @@ export class AttributeDto {
   name: string;
   dataType: Type;
 }
+
 export enum Category {
   Certification = 'CERTIFICATION',
   ProfessionalKnowledge = 'PROFESSIONAL_KNOWLEDGE',
   PersonalInformation = 'PERSONAL_INFORMATION',
   SoftSkills = 'SOFT_SKILLS',
 }
+
 export enum Type {
   String = 'STRING',
   Markdown = 'MARKDOWN',

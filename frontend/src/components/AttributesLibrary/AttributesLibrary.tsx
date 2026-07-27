@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as React from 'react';
 import { AttributeDto, AttributeDtoView } from '../../dto/attribute.ts';
 import { useEffect, useState } from 'react';
@@ -11,13 +10,12 @@ import { deleteAttributes } from './operations/deleteAttributes.ts';
 import EditForm from './forms/EditForm.tsx';
 import AddForm from './forms/AddForm.tsx';
 import { notification } from 'antd';
+import { axiosApi } from '../../axios.ts';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
 
 type NotificationType = 'success' | 'error';
-
-// success' | 'info' | 'warning' | 'error';
 
 const AttributesLibrary: React.FC = () => {
   const [attributes, setAttributes] = useState<AttributeDto[]>([]);
@@ -32,15 +30,7 @@ const AttributesLibrary: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const accessToken = localStorage.getItem('accessToken');
-      const { data } = await axios.get<AttributeDto[]>(
-        `${import.meta.env.VITE_URL}/attribute`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      const { data } = await axiosApi.get<AttributeDto[]>(`/attribute`);
       setAttributes(data);
     };
     fetchData().catch(console.error);
@@ -67,6 +57,7 @@ const AttributesLibrary: React.FC = () => {
 
   return (
     <Flex gap="small" vertical style={{ padding: '10px' }}>
+      <p>ATTRIBUTES LIBRARY</p>
       <Flex align="center" gap="medium">
         <>
           {contextHolder}

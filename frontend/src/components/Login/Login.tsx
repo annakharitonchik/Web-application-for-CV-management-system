@@ -1,32 +1,37 @@
-import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, message } from 'antd';
+import { App as AntApp, Button, Form, Input } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import axios, { type AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
+import { AccessTokenService } from '../AccessTokenService.ts';
+import { axiosApi } from '../../axios.ts';
 interface LoginFormValues {
   email?: string;
   password?: string;
 }
-const Login: React.FC = () => {
-  const [messageApi, contextHolder] = message.useMessage();
+const Login = ({
+  setIsAuthenticated,
+}: {
+  setIsAuthenticated: (arg0: boolean) => void;
+}) => {
+  const { message } = AntApp.useApp();
+  const accessTokenService = new AccessTokenService();
   const navigate = useNavigate();
   const handleLogin = async (values: LoginFormValues) => {
     try {
-      const { data } = await axios.post(
-        import.meta.env.VITE_URL + '/auth/login',
-        values,
-      );
-      localStorage.setItem('accessToken', data.accessToken);
-      messageApi.success('Login success!');
-      setTimeout(() => {
-        navigate('/home');
-      }, 3000);
+      const { data } = await axiosApi.post('/auth/login', values);
+
+      accessTokenService.setToken(data.accessToken);
+      setIsAuthenticated(true);
+      message.success('Login success!');
+
+      navigate('/home');
     } catch (error: unknown) {
       const axiosError = error as AxiosError<{ message: string }>;
 
-      messageApi.error(`${axiosError.response?.data?.message}`);
+      message.error(`${axiosError.response?.data?.message}`);
     }
   };
+
   return (
     <div
       style={{
@@ -37,7 +42,6 @@ const Login: React.FC = () => {
         padding: '0 16px',
       }}
     >
-      {contextHolder}
       <Form
         name="login"
         initialValues={{ remember: true }}

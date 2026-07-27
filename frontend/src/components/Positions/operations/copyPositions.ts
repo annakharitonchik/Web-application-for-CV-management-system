@@ -1,10 +1,11 @@
-import axios, { type AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 import * as React from 'react';
-import type { PositionDto } from '../../../dto/position.ts';
+import { type PositionDto, PositionEditDto } from '../../../dto/position.ts';
+import { axiosApi } from '../../../axios.ts';
 
 type NotificationType = 'success' | 'error';
 
-export const copyPositions = (
+export const copyPositions = async (
   positions: PositionDto[],
   selectedRowKeys: React.Key[],
   setSelectedRowKeys: (arg0: React.Key[]) => void,
@@ -18,50 +19,38 @@ export const copyPositions = (
 ) => {
   setLoading(true);
 
-  setTimeout(async () => {
-    try {
-      const accessToken = localStorage.getItem('accessToken');
+  try {
+    let selectedPosition: PositionDto;
+    for (const id of selectedRowKeys) {
+      selectedPosition = positions.find((p) => p.id === id)!;
 
-      let selectedPosition: PositionDto;
-      for (const id of selectedRowKeys) {
-        selectedPosition = positions.find((p) => p.id === id)!;
-        await axios.post<PositionDto>(
-          `${import.meta.env.VITE_URL}/position`,
-          selectedPosition,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
-      }
-      setPositions(
-        (
-          await axios.get<PositionDto[]>(
-            `${import.meta.env.VITE_URL}/position`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            },
-          )
-        ).data,
-      );
-      openNotificationWithIcon(
-        'success',
-        'Success',
-        `Positions were copied successfully!`,
-      );
-      setSelectedRowKeys([]);
-      setLoading(false);
-    } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      openNotificationWithIcon(
-        'error',
-        'Error',
-        `${axiosError.response?.data?.message}`,
-      );
-      setLoading(false);
+      const selectedPositionView: PositionEditDto = {
+        key: selectedPosition.id,
+        name: selectedPosition.name,
+        description: selectedPosition.description,
+        isPublic: selectedPosition.isPublic,
+        attributes: selectedPosition.attributes.map(
+          (attribute) => attribute.name,
+        ),
+      };
+
+      await axiosApi.post<PositionDto>(`/position`, selectedPositionView);
     }
-  }, 1000);
+    setPositions((await axiosApi.get<PositionDto[]>(`/position`)).data);
+    openNotificationWithIcon(
+      'success',
+      'Success',
+      `Positions were copied successfully!`,
+    );
+    setSelectedRowKeys([]);
+    setLoading(false);
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<{ message: string }>;
+    openNotificationWithIcon(
+      'error',
+      'Error',
+      `${axiosError.response?.data?.message}`,
+    );
+    setLoading(false);
+  }
 };

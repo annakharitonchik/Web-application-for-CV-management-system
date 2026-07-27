@@ -1,26 +1,26 @@
 import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, message } from 'antd';
+import { App as AntApp, Button, Form, Input } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import axios, { type AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
+import { axiosApi } from '../../axios.ts';
 interface RegisterFormValues {
   email?: string;
   password?: string;
 }
 const Register: React.FC = () => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = AntApp.useApp();
   const navigate = useNavigate();
   const handleRegistration = async (values: RegisterFormValues) => {
     try {
-      await axios.post(import.meta.env.VITE_URL + '/auth/register', values);
-      messageApi.success('Registration success!');
-      setTimeout(() => {
-        navigate('/');
-      }, 3000);
+      await axiosApi.post('/auth/register', values);
+      message.success('Registration success!');
+
+      navigate('/');
     } catch (error: unknown) {
       const axiosError = error as AxiosError<{ message: string }>;
 
-      messageApi.error(`${axiosError.response?.data?.message}`);
+      message.error(`${axiosError.response?.data?.message}`);
     }
   };
 
@@ -34,7 +34,6 @@ const Register: React.FC = () => {
         padding: '0 16px',
       }}
     >
-      {contextHolder}
       <Form
         name="login"
         initialValues={{ remember: true }}

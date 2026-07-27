@@ -8,12 +8,16 @@ export class PositionService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(dto: PositionDto): Promise<Position> {
-    const { name, description, isPublic } = dto;
+    const { name, description, isPublic, attributes } = dto;
     return this.prismaService.position.create({
       data: {
         name: name.trim(),
         description,
         isPublic,
+
+        attributes: {
+          connect: attributes.map((attributeName) => ({ name: attributeName })),
+        },
       },
     });
   }

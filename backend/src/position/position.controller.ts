@@ -1,6 +1,5 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -9,7 +8,6 @@ import {
   Post,
   Put,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { PositionService } from './position.service';
 import { PositionDto } from './dto/position.dto';
@@ -20,7 +18,6 @@ import { RolesGuard } from '../auth/roles/roles.guard';
 import { ApplyDto } from './dto/apply.dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('position')
 export class PositionController {
   constructor(private readonly positionService: PositionService) {}
@@ -48,6 +45,7 @@ export class PositionController {
   getAll() {
     return this.positionService.getAll();
   }
+
   @Put(':id/apply')
   @Roles(Role.Candidate)
   apply(@Param('id', ParseIntPipe) id: number, @Body() dto: ApplyDto) {

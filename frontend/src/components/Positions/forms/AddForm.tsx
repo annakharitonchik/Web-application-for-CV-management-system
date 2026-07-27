@@ -27,7 +27,7 @@ const tailLayout = {
 const EditModal: React.FC<{
   attributes: AttributeDto[];
   setIsModalOpen: (arg0: boolean) => void;
-  position: PositionDto;
+  positions: PositionDto[];
   setPositions: (arg0: PositionDto[]) => void;
   setLoading: (arg0: boolean) => void;
   openNotificationWithIcon: (
@@ -38,7 +38,7 @@ const EditModal: React.FC<{
 }> = ({
   attributes,
   setIsModalOpen,
-  position,
+  positions,
   setPositions,
   setLoading,
   openNotificationWithIcon,
@@ -51,7 +51,7 @@ const EditModal: React.FC<{
       isPublic: true,
       attributes: [],
     });
-  }, [position, form]);
+  }, [positions, form]);
 
   const handlePosition = (createdPosition: PositionEditDto) => {
     setIsModalOpen(false);

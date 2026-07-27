@@ -1,14 +1,11 @@
 import { type TableColumnsType, Tag } from 'antd';
 import type { PositionDtoView } from '../../dto/position.ts';
-import { jwtDecode, type JwtPayload } from 'jwt-decode';
 
-interface CustomJwtPayload extends JwtPayload {
-  email?: string;
-}
-const accessToken = localStorage.getItem('accessToken');
+import { AccessTokenService } from '../AccessTokenService.ts';
 
-const email =
-  (accessToken && jwtDecode<CustomJwtPayload>(accessToken).email) || '';
+const accessTokenService = new AccessTokenService();
+
+const { email } = accessTokenService.decodeToken();
 
 const Header: TableColumnsType<PositionDtoView> = [
   {
