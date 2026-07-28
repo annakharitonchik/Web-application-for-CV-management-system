@@ -57,7 +57,13 @@ const AttributesLibrary: React.FC = () => {
 
   return (
     <Flex gap="small" vertical style={{ padding: '10px' }}>
-      <p>ATTRIBUTES LIBRARY</p>
+      <Flex
+        align="center"
+        justify="center"
+        style={{ backgroundColor: 'white' }}
+      >
+        <p>ATTRIBUTES LIBRARY</p>
+      </Flex>
       <Flex align="center" gap="medium">
         <>
           {contextHolder}
