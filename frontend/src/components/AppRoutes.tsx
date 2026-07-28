@@ -49,7 +49,7 @@ const AppRoutes = () => {
           <Route
             path="/attribute"
             element={
-              isAuthenticated && role !== 'ADMIN' && role !== 'RECRUITER' ? (
+              role !== 'ADMIN' && role !== 'RECRUITER' ? (
                 <Navigate to="/forbidden" replace />
               ) : (
                 <AttributesLibrary />
@@ -60,7 +60,7 @@ const AppRoutes = () => {
           <Route
             path="/position"
             element={
-              isAuthenticated && role !== 'ADMIN' && role !== 'RECRUITER' ? (
+              role !== 'ADMIN' && role !== 'RECRUITER' ? (
                 <Navigate to="/forbidden" replace />
               ) : (
                 <Positions />
