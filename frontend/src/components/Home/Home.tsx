@@ -18,10 +18,11 @@ const Home: React.FC = () => {
   const [positions, setPositions] = useState<PositionDto[]>([]);
   const [role, setRole] = useState<string | null>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
+  const [reload, setReload] = useState(false);
   const [loadingApply, setLoadingApply] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const accessTokenService = new AccessTokenService();
+
   useEffect(() => {
     const fetchData = async () => {
       const { role } = accessTokenService.decodeToken();
@@ -32,7 +33,7 @@ const Home: React.FC = () => {
     };
 
     fetchData().catch(console.error);
-  }, []);
+  }, [reload]);
 
   const { email } = accessTokenService.decodeToken();
 
@@ -80,6 +81,7 @@ const Home: React.FC = () => {
                   setSelectedRowKeys,
                   setLoadingApply,
                   openNotificationWithIcon,
+                  setReload,
                 )
               }
               disabled={selectedRowKeys.length <= 0}

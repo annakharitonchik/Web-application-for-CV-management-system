@@ -29,12 +29,15 @@ export const getHeader = (
   if (role === 'CANDIDATE') {
     header.push({
       title: 'Status',
-      render: (_, record) =>
-        record.users.some((user) => user.email === email) ? (
-          <Tag color="green">Applied</Tag>
-        ) : (
-          <Tag color="blue">Available</Tag>
-        ),
+      render: (_, record) => {
+        const applied = record.users.some((user) => user.email === email);
+
+        return (
+          <Tag color={applied ? 'green' : 'blue'}>
+            {applied ? 'Applied' : 'Available'}
+          </Tag>
+        );
+      },
     });
   }
 

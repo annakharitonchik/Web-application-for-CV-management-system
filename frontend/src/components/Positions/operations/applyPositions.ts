@@ -15,6 +15,7 @@ export const applyPositions = async (
     title: string,
     description: string,
   ) => void,
+  setReload: (arg0: (arg1: boolean) => boolean) => void,
 ) => {
   setLoading(true);
 
@@ -32,6 +33,7 @@ export const applyPositions = async (
     );
     setSelectedRowKeys([]);
     setLoading(false);
+    setReload((prev) => !prev);
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     openNotificationWithIcon(
