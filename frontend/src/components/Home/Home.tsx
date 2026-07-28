@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Table, Button, Flex, notification } from 'antd';
 import type { TableProps } from 'antd';
 import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
-import Header from './Header.tsx';
+import { getHeader } from './Header.tsx';
 import transformPositionDto from '../Positions/operations/transformPositionDto.ts';
 import { applyPositions } from '../Positions/operations/applyPositions.ts';
 import { AccessTokenService } from '../AccessTokenService.ts';
@@ -93,7 +93,7 @@ const Home: React.FC = () => {
           rowSelection={
             role !== null && role === 'CANDIDATE' ? rowSelection : undefined
           }
-          columns={Header}
+          columns={getHeader(role)}
           dataSource={dataSource}
           pagination={false}
           scroll={{
