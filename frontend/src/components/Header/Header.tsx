@@ -1,17 +1,12 @@
 import { Button, Layout, Menu } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-
-import { AccessTokenService } from '../AccessTokenService.ts';
+import { useAuth, useUser } from '../AuthContext.tsx';
 const { Header: HeaderAnt } = Layout;
-const Header = ({
-  setIsAuthenticated,
-}: {
-  setIsAuthenticated: (arg0: boolean) => void;
-}) => {
+const Header = () => {
   const navigate = useNavigate();
 
-  const accessTokenService = new AccessTokenService();
-  const { email, role } = accessTokenService.decodeToken();
+  const { email, role } = useUser();
+  const { removeToken } = useAuth();
 
   return (
     <HeaderAnt
@@ -62,8 +57,7 @@ const Header = ({
             style={{ marginLeft: '10px' }}
             type="primary"
             onClick={() => {
-              accessTokenService.removeToken();
-              setIsAuthenticated(false);
+              removeToken();
               navigate('/');
             }}
           >

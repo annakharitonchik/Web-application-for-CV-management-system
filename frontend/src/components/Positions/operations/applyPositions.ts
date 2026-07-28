@@ -1,7 +1,6 @@
 import { type AxiosError } from 'axios';
 import * as React from 'react';
 import type { PositionDto } from '../../../dto/position.ts';
-import { AccessTokenService } from '../../AccessTokenService.ts';
 import { axiosApi } from '../../../axios.ts';
 
 type NotificationType = 'success' | 'error';
@@ -16,13 +15,11 @@ export const applyPositions = async (
     description: string,
   ) => void,
   setReload: (arg0: (arg1: boolean) => boolean) => void,
+  email: string,
 ) => {
   setLoading(true);
 
   try {
-    const accessTokenService = new AccessTokenService();
-    const { email } = accessTokenService.decodeToken();
-
     for (const id of selectedRowKeys) {
       await axiosApi.put<PositionDto[]>(`/position/${id}/apply`, { email });
     }

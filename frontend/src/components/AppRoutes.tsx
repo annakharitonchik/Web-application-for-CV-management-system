@@ -7,33 +7,25 @@ import Home from './Home/Home.tsx';
 import { Layout } from 'antd';
 import NotFound from './NotFound/NotFound.tsx';
 import Header from './Header/Header.tsx';
-import { AccessTokenService } from './AccessTokenService.ts';
 import Forbidden from './Forbidden/Forbidden.tsx';
-import { useState } from 'react';
+import { useUser } from './AuthContext.tsx';
 
 const { Content } = Layout;
 
 const AppRoutes = () => {
-  const accessTokenService = new AccessTokenService();
-  const { role } = accessTokenService.decodeToken();
+  const { role } = useUser();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!accessTokenService.getToken(),
-  );
+  const isAuthenticated = !!role;
 
   return (
     <Layout>
-      <Header setIsAuthenticated={setIsAuthenticated} />
+      <Header />
       <Content>
         <Routes>
           <Route
             path="/"
             element={
-              isAuthenticated ? (
-                <Navigate to="/home" replace />
-              ) : (
-                <Login setIsAuthenticated={setIsAuthenticated} />
-              )
+              isAuthenticated ? <Navigate to="/home" replace /> : <Login />
             }
           />
 

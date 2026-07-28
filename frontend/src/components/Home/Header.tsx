@@ -1,15 +1,10 @@
 import { type TableColumnsType, Tag } from 'antd';
 import type { PositionDtoView } from '../../dto/position.ts';
+import type { User } from '../User.tsx';
 
-import { AccessTokenService } from '../AccessTokenService.ts';
+export const getHeader = (user: User): TableColumnsType<PositionDtoView> => {
+  const { email, role } = user;
 
-const accessTokenService = new AccessTokenService();
-
-const { email } = accessTokenService.decodeToken();
-
-export const getHeader = (
-  role: string | null,
-): TableColumnsType<PositionDtoView> => {
   const header: TableColumnsType<PositionDtoView> = [
     {
       title: 'Position',

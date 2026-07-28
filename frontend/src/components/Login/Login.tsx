@@ -2,27 +2,23 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { App as AntApp, Button, Form, Input } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { type AxiosError } from 'axios';
-import { AccessTokenService } from '../AccessTokenService.ts';
 import { axiosApi } from '../../axios.ts';
+import { useAuth } from '../AuthContext.tsx';
 interface LoginFormValues {
   email?: string;
   password?: string;
 }
-const Login = ({
-  setIsAuthenticated,
-}: {
-  setIsAuthenticated: (arg0: boolean) => void;
-}) => {
+const Login = () => {
   const { message } = AntApp.useApp();
-  const accessTokenService = new AccessTokenService();
   const navigate = useNavigate();
+  const { setToken } = useAuth();
+
   const handleLogin = async (values: LoginFormValues) => {
     try {
       const { data } = await axiosApi.post('/auth/login', values);
 
-      accessTokenService.setToken(data.accessToken);
-      setIsAuthenticated(true);
       message.success('Login success!');
+      setToken(data.accessToken);
 
       navigate('/home');
     } catch (error: unknown) {

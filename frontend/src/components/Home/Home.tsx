@@ -6,8 +6,8 @@ import { type PositionDto, PositionDtoView } from '../../dto/position.ts';
 import { getHeader } from './Header.tsx';
 import transformPositionDto from '../Positions/operations/transformPositionDto.ts';
 import { applyPositions } from '../Positions/operations/applyPositions.ts';
-import { AccessTokenService } from '../AccessTokenService.ts';
 import { axiosApi } from '../../axios.ts';
+import { useUser } from '../AuthContext.tsx';
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>['rowSelection'];
@@ -16,26 +16,22 @@ type NotificationType = 'success' | 'error';
 
 const Home: React.FC = () => {
   const [positions, setPositions] = useState<PositionDto[]>([]);
-  const [role, setRole] = useState<string | null>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [reload, setReload] = useState(false);
   const [loadingApply, setLoadingApply] = useState(false);
   const [api, contextHolder] = notification.useNotification();
-  const accessTokenService = new AccessTokenService();
 
   useEffect(() => {
     const fetchData = async () => {
-      const { role } = accessTokenService.decodeToken();
-
       const { data } = await axiosApi.get<PositionDto[]>(`/position`);
       setPositions(data);
-      setRole(role);
     };
 
     fetchData().catch(console.error);
   }, [reload]);
 
-  const { email } = accessTokenService.decodeToken();
+  const user = useUser();
+  const { email, role } = user;
 
   const rowSelection: TableRowSelection<PositionDtoView> = {
     selectedRowKeys,
@@ -82,6 +78,7 @@ const Home: React.FC = () => {
                   setLoadingApply,
                   openNotificationWithIcon,
                   setReload,
+                  email!,
                 )
               }
               disabled={selectedRowKeys.length <= 0}
@@ -95,7 +92,7 @@ const Home: React.FC = () => {
           rowSelection={
             role !== null && role === 'CANDIDATE' ? rowSelection : undefined
           }
-          columns={getHeader(role)}
+          columns={getHeader(user)}
           dataSource={dataSource}
           pagination={false}
           scroll={{
