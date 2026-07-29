@@ -57,11 +57,7 @@ const Home: React.FC = () => {
 
   return (
     <Flex vertical>
-      <Flex
-        align="center"
-        justify="center"
-        style={{ backgroundColor: 'white' }}
-      >
+      <Flex align="center" justify="center">
         <p>POSITIONS</p>
       </Flex>
 

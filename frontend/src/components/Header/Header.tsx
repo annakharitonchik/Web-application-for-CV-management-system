@@ -1,8 +1,15 @@
-import { Button, Layout, Menu } from 'antd';
+import { Button, Layout, Menu, Switch } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth, useUser } from '../AuthContext.tsx';
 const { Header: HeaderAnt } = Layout;
-const Header = () => {
+
+const Header = ({
+  dark,
+  setDark,
+}: {
+  dark: boolean;
+  setDark: (checked: boolean) => void;
+}) => {
   const navigate = useNavigate();
 
   const { email, role } = useUser();
@@ -13,7 +20,6 @@ const Header = () => {
       style={{
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: '#ffffff',
       }}
     >
       {role === 'ADMIN' || role === 'RECRUITER' ? (
@@ -37,7 +43,6 @@ const Header = () => {
             flex: 1,
             minWidth: 0,
             border: 0,
-            backgroundColor: '#ffffff',
           }}
         />
       ) : (
@@ -46,10 +51,16 @@ const Header = () => {
             flex: 1,
             minWidth: 0,
             border: 0,
-            backgroundColor: '#ffffff',
           }}
         ></div>
       )}
+      <Switch
+        checked={dark}
+        checkedChildren="🌙"
+        unCheckedChildren="☀️"
+        onChange={setDark}
+        style={{ marginRight: 16 }}
+      />
       {email && (
         <>
           <div>{`Your email: ${email}`}</div>

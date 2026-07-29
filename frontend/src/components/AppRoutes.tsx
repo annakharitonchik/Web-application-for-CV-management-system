@@ -12,14 +12,20 @@ import { useUser } from './AuthContext.tsx';
 
 const { Content } = Layout;
 
-const AppRoutes = () => {
+const AppRoutes = ({
+  dark,
+  setDark,
+}: {
+  dark: boolean;
+  setDark: (checked: boolean) => void;
+}) => {
   const { role } = useUser();
 
   const isAuthenticated = !!role;
 
   return (
-    <Layout>
-      <Header />
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header dark={dark} setDark={setDark} />
       <Content>
         <Routes>
           <Route

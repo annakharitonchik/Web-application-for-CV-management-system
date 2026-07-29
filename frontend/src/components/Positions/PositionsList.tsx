@@ -72,11 +72,7 @@ const PositionsList: React.FC = () => {
 
   return (
     <Flex gap="small" vertical style={{ padding: '10px' }}>
-      <Flex
-        align="center"
-        justify="center"
-        style={{ backgroundColor: 'white' }}
-      >
+      <Flex align="center" justify="center">
         <p>POSITIONS LIST</p>
       </Flex>
       <Flex align="center" gap="medium">
