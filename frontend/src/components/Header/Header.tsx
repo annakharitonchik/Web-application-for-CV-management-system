@@ -58,7 +58,7 @@ const Header = () => {
             type="primary"
             onClick={() => {
               removeToken();
-              navigate('/');
+              navigate('/', { replace: true });
             }}
           >
             Log out
